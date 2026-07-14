@@ -1,42 +1,48 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Keep this repository limited to the GitHub Pages site.
+# Ignore every top-level item unless it is explicitly required below.
+/*
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+!/.github/
+/.github/*
+!/.github/workflows/
+/.github/workflows/*
+!/.github/workflows/deploy-pages.yml
+!/.gitignore
+!/README.md
+!/app/
+/app/*
+!/app/globals.css
+!/app/layout.tsx
+!/app/page.tsx
+!/app/components/
+/app/components/*
+!/app/components/JourneyPlayground.module.css
+!/app/components/JourneyPlayground.tsx
+!/app/components/PredictionCheck.module.css
+!/app/components/PredictionCheck.tsx
+!/app/components/RequestThread.module.css
+!/app/components/RequestThread.tsx
+!/public/
+/public/*
+!/public/favicon.svg
+!/public/og.png
+!/tests/
+/tests/*
+!/tests/static-export.test.mjs
+!/eslint.config.mjs
+!/next.config.ts
+!/package-lock.json
+!/package.json
+!/postcss.config.mjs
+!/tsconfig.json
 
-# testing
-/coverage
-
-# next.js
-/.next/
-/.vinext/
-/out/
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
+# Never publish local, generated, secret, or editor files inside allowed folders.
+**/.DS_Store
+**/node_modules/
+**/.next/
+**/out/
+**/coverage/
+**/*.log
+**/*.pem
+**/.env*
 next-env.d.ts
-/dist/
-/.wrangler/
-/outputs/
-/work/

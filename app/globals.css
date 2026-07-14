@@ -226,6 +226,11 @@ button:disabled {
   font-size: 12px;
 }
 
+.progress-track {
+  position: relative;
+  min-width: 0;
+}
+
 .chapter-progress ol {
   list-style: none;
   display: grid;
@@ -233,6 +238,43 @@ button:disabled {
   margin: 0;
   padding: 0;
   position: relative;
+}
+
+.journey-progress-marker {
+  position: absolute;
+  z-index: 4;
+  left: calc((var(--active-chapter) * 12.5%) + 6.25%);
+  top: -9px;
+  display: grid;
+  place-items: center;
+  transform: translateX(-50%);
+  transition: left 420ms cubic-bezier(0.2, 0.75, 0.25, 1);
+  pointer-events: none;
+}
+
+.journey-progress-marker .packet-face {
+  width: 19px;
+  height: 19px;
+  border-width: 2px;
+  border-radius: 6px 6px 8px 8px;
+  background: var(--coral);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.journey-progress-marker .packet-face::before {
+  left: 4px;
+  top: 4px;
+  width: 3px;
+  height: 3px;
+  box-shadow: 6px 0 0 currentColor;
+}
+
+.journey-progress-marker .packet-face::after {
+  left: 4px;
+  top: 8px;
+  width: 7px;
+  height: 4px;
+  border-bottom-width: 1px;
 }
 
 .chapter-progress ol::before {
@@ -473,6 +515,20 @@ button:disabled {
   pointer-events: none;
   background-image: radial-gradient(rgb(22 71 216 / 16%) 1.4px, transparent 1.4px);
   background-size: 22px 22px;
+}
+
+.request-thread-shell {
+  margin: 80px 0 92px;
+  padding: clamp(24px, 4vw, 48px);
+  background: linear-gradient(135deg, var(--paper), var(--pale-mint));
+  border: 3px solid var(--ink);
+  border-radius: 36px;
+  box-shadow: 0 14px 0 var(--coral);
+}
+
+.playground-wrap {
+  margin: 104px 0 0;
+  scroll-margin-top: 96px;
 }
 
 .lab-heading,
@@ -2290,6 +2346,17 @@ button:disabled {
     border-radius: 28px;
   }
 
+  .request-thread-shell {
+    margin: 64px 0 74px;
+    padding: 24px 18px;
+    border-radius: 28px;
+  }
+
+  .playground-wrap {
+    margin-top: 78px;
+    scroll-margin-top: 112px;
+  }
+
   .lab-heading {
     align-items: flex-start;
   }
@@ -2435,6 +2502,16 @@ button:disabled {
 
   .chapter-progress ol::before {
     top: 15px;
+  }
+
+  .journey-progress-marker {
+    top: -8px;
+  }
+
+  .request-thread-shell {
+    padding: 20px 14px;
+    border-radius: 24px;
+    box-shadow: 0 9px 0 var(--coral);
   }
 
   .hero {
@@ -2598,6 +2675,7 @@ button:disabled {
   min-height: 0;
   padding: clamp(28px, 3.7vw, 56px);
   overflow: visible;
+  scroll-margin-top: 96px;
 }
 
 .chapter-masthead {
@@ -3015,6 +3093,14 @@ button:disabled {
 
 .dns-flow.resolved .dns-book {
   animation: dnsBookPop 1.4s ease-in-out infinite alternate;
+}
+
+.protocol-simulator .result-line {
+  display: block;
+}
+
+.protocol-simulator .result-line strong {
+  display: inline;
 }
 
 /* Chapter 5: active route traces and pulsing hops */
@@ -3879,6 +3965,7 @@ button:disabled {
   align-items: center;
   justify-items: stretch;
   position: relative;
+  align-self: start;
 }
 
 .mission-route .route-stage:last-child {
@@ -3897,6 +3984,11 @@ button:disabled {
   align-content: center;
   align-items: center;
   column-gap: 0;
+}
+
+.mission-route .route-stage > .route-station {
+  grid-column: 1;
+  grid-row: 1;
 }
 
 .mission-route .speech-bubble,
@@ -4001,6 +4093,27 @@ button:disabled {
   white-space: nowrap;
 }
 
+.dns-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.dns-controls .small-button:disabled:hover {
+  box-shadow: 4px 4px 0 var(--ink);
+  transform: none;
+}
+
+.dns-flow.ip-revealed .ip-value {
+  background: var(--sky);
+}
+
+.dns-flow.ip-revealed .ip-value strong {
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
 .dns-branch-connector {
   width: 4px;
   height: 44px;
@@ -4098,6 +4211,10 @@ button:disabled {
     padding-inline: 14px;
   }
 
+  .chapter-section {
+    scroll-margin-top: 112px;
+  }
+
   .mission-route,
   .mission-route.hero-route {
     grid-template-columns: 1fr;
@@ -4113,6 +4230,10 @@ button:disabled {
   .mission-route .route-stage:last-child {
     grid-template-columns: 1fr;
     justify-items: center;
+  }
+
+  .dns-controls {
+    justify-content: flex-start;
   }
 
   .mission-route .route-stage > .route-connector {

@@ -16,6 +16,7 @@ const title = "Internet in Motion — Networking, visually explained";
 const description = "Follow a website request through DNS, packets, routing, protocols, and performance in eight interactive chapters.";
 const canonicalUrl = "https://daniissac.com/internet-in-motion/";
 const socialImage = "https://daniissac.com/internet-in-motion/og.png";
+const basePath = process.env.GITHUB_PAGES === "1" ? "/internet-in-motion" : "";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://daniissac.com"),
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
   description,
   applicationName: "Internet in Motion",
   alternates: { canonical: canonicalUrl },
-  icons: { icon: "/internet-in-motion/favicon.svg" },
+  icons: { icon: `${basePath}/favicon.svg` },
   openGraph: {
     title,
     description,
