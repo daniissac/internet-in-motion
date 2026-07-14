@@ -2,6 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
+import JourneyPlayground from "./components/JourneyPlayground";
+import PredictionCheck from "./components/PredictionCheck";
+import RequestThread from "./components/RequestThread";
 
 const chapters = [
   { id: "network", short: "Network", title: "Hello, Network!" },
@@ -26,13 +29,14 @@ type MissionStop = {
 const missionStops: MissionStop[] = [
   { label: "Your device", note: "The browser reuses cached answers and connections when possible. Otherwise it resolves the site name, sets up a secure transport, and sends HTTP requests.", icon: "laptop", tone: "yellow", lookupSpeech: "Where is google.com?", requestSpeech: "Open google.com" },
   { label: "Wi-Fi router", note: "Wi-Fi is the local radio link to an access point. In many homes, the access point and gateway router are combined in one box.", icon: "wifi", tone: "paper", lookupSpeech: "Forward DNS packet", requestSpeech: "Local gateway" },
-  { label: "ISP network", note: "Your provider’s network carries packets toward the DNS resolver or the website’s destination network.", icon: "isp", tone: "mint", lookupSpeech: "Toward resolver", requestSpeech: "Toward destination" },
-  { label: "Internet routers", note: "Routers forward packets hop by hop toward the destination IP. Different packets or replies can take different routes.", icon: "router", tone: "yellow", requestSpeech: "Toward that IP" },
-  { label: "Web server", note: "After a secure transport is established, the server receives HTTP requests and returns response data. The browser may request more resources next.", icon: "server", tone: "sky", requestSpeech: "HTTP response + data" },
-  { label: "DNS resolver", note: "A recursive resolver returns one or more IP addresses from cache or asks other DNS servers. It is separate from the later website-request path.", icon: "dns", tone: "coral", lookupSpeech: "google.com → IPs" },
+  { label: "ISP network", note: "Your provider’s network carries packets toward the DNS resolver or the website’s destination network.", icon: "isp", tone: "mint", lookupSpeech: "Toward resolver", requestSpeech: "Across provider network" },
+  { label: "Internet routers", note: "Routers forward packets hop by hop toward the destination IP. Different packets or replies can take different routes.", icon: "router", tone: "yellow", requestSpeech: "Route to server IP" },
+  { label: "Web server", note: "After a secure transport is established, the server receives HTTP requests and returns response data. The browser may request more resources next.", icon: "server", tone: "sky", requestSpeech: "Response data returns" },
+  { label: "DNS resolver", note: "A recursive resolver returns one or more IP addresses from cache or asks authoritative DNS servers. It is a lookup destination, not a hop on the later website-request path.", icon: "dns", tone: "coral", lookupSpeech: "IP answer returns" },
 ];
 
 const websiteStopIndexes = [0, 1, 2, 3, 4];
+const exampleGoogleIpv4 = "192.178.173.100";
 
 const webSteps = [
   { label: "Find address", detail: "The browser resolves the host name unless it already has a usable cached answer.", code: "DNS" },
@@ -157,6 +161,7 @@ export default function Home() {
   const [packetRun, setPacketRun] = useState(0);
   const [missingPacket, setMissingPacket] = useState(false);
   const [dnsResolved, setDnsResolved] = useState(false);
+  const [dnsIpRevealed, setDnsIpRevealed] = useState(false);
   const [dnsRun, setDnsRun] = useState(0);
   const [routeBlocked, setRouteBlocked] = useState(false);
   const [routeRun, setRouteRun] = useState(0);
@@ -253,11 +258,16 @@ export default function Home() {
   }, [motionPaused]);
 
   const performance = useMemo(() => {
+    const contributions = [
+      { label: "round-trip latency", seconds: (latency * 2) / 1000 },
+      { label: "transfer time from available bandwidth", seconds: 18 / Math.max(bandwidth, 1) },
+      { label: "loss recovery", seconds: packetLoss * 0.22 },
+    ];
     const estimatedSeconds = Math.max(
       0.5,
-      (latency * 2) / 1000 + 18 / Math.max(bandwidth, 1) + packetLoss * 0.22,
+      contributions.reduce((total, contribution) => total + contribution.seconds, 0),
     );
-    const biggest = packetLoss >= 4 ? "packet loss" : latency >= 140 ? "latency" : bandwidth <= 15 ? "limited bandwidth" : "no major bottleneck";
+    const biggest = contributions.reduce((largest, contribution) => contribution.seconds > largest.seconds ? contribution : largest);
     return { estimatedSeconds, biggest };
   }, [latency, bandwidth, packetLoss]);
 
@@ -289,6 +299,7 @@ export default function Home() {
   const replayDnsLookup = () => {
     if (dnsTimer.current !== null) window.clearTimeout(dnsTimer.current);
     setDnsResolved(false);
+    setDnsIpRevealed(false);
     setDnsRun((value) => value + 1);
     dnsTimer.current = window.setTimeout(() => {
       setDnsResolved(true);
@@ -324,16 +335,19 @@ export default function Home() {
           <span>Your route</span>
           <strong>{activeChapter + 1} / 8 · {chapters[activeChapter].short}</strong>
         </div>
-        <ol>
-          {chapters.map((chapter, index) => (
-            <li key={chapter.id} className={index === activeChapter ? "active" : index < activeChapter ? "passed" : ""}>
-              <a href={"#" + chapter.id} aria-current={index === activeChapter ? "step" : undefined}>
-                <b>{index + 1}</b>
-                <span>{chapter.short}</span>
-              </a>
-            </li>
-          ))}
-        </ol>
+        <div className="progress-track" style={{ "--active-chapter": activeChapter } as CSSProperties}>
+          <span className="journey-progress-marker" aria-hidden="true"><PacketFace /></span>
+          <ol>
+            {chapters.map((chapter, index) => (
+              <li key={chapter.id} className={index === activeChapter ? "active" : index < activeChapter ? "passed" : ""}>
+                <a href={"#" + chapter.id} aria-current={index === activeChapter ? "step" : undefined}>
+                  <b>{index + 1}</b>
+                  <span>{chapter.short}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </div>
       </nav>
 
       <main className="site-shell" id="main">
@@ -346,7 +360,7 @@ export default function Home() {
             <p>Follow one request from your device to a website — and all the way back again.</p>
             <div className="hero-cta-row">
               <a className="primary-button" href="#network" onClick={replayRoute}>Start the journey <em>→</em></a>
-              <span>8 chapters · about 12 min</span>
+              <span>8 chapters · one guided playground</span>
             </div>
           </div>
         </section>
@@ -366,9 +380,9 @@ export default function Home() {
           <div className="mission-flow">
             <section className="mission-phase combined-phase" aria-labelledby="mission-journey-title">
               <div className="mission-phase-heading">
-                <div><h3 id="mission-journey-title">Find, connect, request, return</h3><p>Your device uses one shared local path through the Wi-Fi router and ISP. If it needs an address, DNS branches to a resolver; then the browser connects to the site, sends HTTP requests, and receives responses.</p></div>
+                <div><h3 id="mission-journey-title">Resolve the name. Reach the site. Return the page.</h3><p>If your device lacks a usable cached address, it sends a DNS query through the Wi-Fi router and ISP to a resolver. Once it has an IP address, the browser establishes a secure connection, sends HTTP requests to the web server, and receives response data.</p></div>
               </div>
-              <p className="traffic-key"><span className="outbound-key">DNS lookup ⇅</span><span className="outbound-key request-key">HTTP request →</span><span className="return-key">Responses ←</span></p>
+              <p className="traffic-key"><span className="outbound-key">DNS query + answer ⇅</span><span className="outbound-key request-key">Secure connection + request →</span><span className="return-key">Response data ←</span></p>
               <ol className="mission-route hero-route combined-route" aria-label="One website journey: the device, local router and provider are shared; DNS branches to a resolver when needed; the request then continues through Internet routers to the web server and responses return">
                 {websiteStopIndexes.map((stopIndex, index) => {
                   const stop = missionStops[stopIndex];
@@ -381,7 +395,7 @@ export default function Home() {
                       </button>
                       {stopIndex === 2 && (
                         <div className="dns-side-lookup">
-                          <span className="dns-side-label">If no cached answer</span>
+                          <span className="dns-side-label">If no usable cached address</span>
                           <span className="dns-branch-connector" aria-hidden="true">
                             <PacketFace key={heroRun + "-lookup-out-2"} className="mission-packet lookup-query lookup-query-2" />
                             <PacketFace key={heroRun + "-lookup-back-2"} className="mission-packet lookup-answer lookup-answer-2" />
@@ -414,6 +428,8 @@ export default function Home() {
             <span>{routeStatus}</span>
           </p>
         </section>
+
+        <RequestThread className="request-thread-shell" motionPaused={motionPaused} />
 
         <section id="network" data-chapter-index="0" className="chapter-section chapter-blue" aria-labelledby="network-title">
           <ChapterMasthead number="01" id="network-title" title="Hello, Network!" />
@@ -469,9 +485,33 @@ export default function Home() {
               <div><span className="mini-kicker">Simplified TCP lab</span><h3>Watch “NETWORK” split, travel, and reassemble.</h3></div>
               <div className="button-pair">
                 <button className="small-button blue-button" type="button" onClick={() => setPacketRun((value) => value + 1)}>Replay split ↻</button>
-                <button className="small-button coral-button" type="button" aria-pressed={missingPacket} onClick={() => setMissingPacket((value) => !value)}>{missingPacket ? "Resend #3" : "Drop #3"}</button>
+                <button
+                  className="small-button coral-button"
+                  type="button"
+                  aria-pressed={missingPacket}
+                  onClick={() => {
+                    if (missingPacket) {
+                      setMissingPacket(false);
+                      setPacketRun((value) => value + 1);
+                    } else {
+                      setMissingPacket(true);
+                    }
+                  }}
+                >
+                  {missingPacket ? "Resend #3" : "Drop #3"}
+                </button>
               </div>
             </div>
+            <PredictionCheck
+              question="If simplified TCP data piece #3 is lost, what should happen?"
+              choices={[
+                { id: "guess", label: "The receiver guesses the missing data" },
+                { id: "recover", label: "The gap is detected and the sender retransmits the missing data" },
+                { id: "restart", label: "Every packet starts again from the beginning" },
+              ]}
+              correctChoiceId="recover"
+              explanation="TCP acknowledgments and timers help the sender detect unacknowledged data and retransmit it. This scene simplifies the exact acknowledgment exchange."
+            />
             <ConceptLayout
               explanation="Data is carried in packets. In this simplified TCP example, sequence information helps detect missing data and rebuild the byte stream in order—even when packets arrive out of order."
               takeaway="Internet data travels in packets; reliable transports recover losses and rebuild ordered data."
@@ -495,17 +535,24 @@ export default function Home() {
           <div className="play-card dns-simulator">
             <div className="play-card-heading">
               <div><span className="mini-kicker">Animated lookup</span><h3>Send a name out. Bring an address back.</h3></div>
-              <button className="small-button yellow-button" type="button" onClick={replayDnsLookup}>Replay lookup ↻</button>
+              <div className="dns-controls">
+                <button className="small-button yellow-button" type="button" onClick={replayDnsLookup}>{dnsRun ? "Replay lookup ↻" : "Run lookup →"}</button>
+                <button className="small-button blue-button" type="button" disabled={!dnsResolved} onClick={() => setDnsIpRevealed(true)}>Reveal example IP</button>
+              </div>
             </div>
             <ConceptLayout
               explanation="For this web lookup, DNS maps a domain name to one or more IPv4 or IPv6 addresses. A recursive resolver may answer from cache or ask other DNS servers."
               takeaway="DNS helps devices find address records associated with domain names."
-              status={dnsResolved ? "The resolver returned one or more current IP addresses for google.com. The exact answer can vary by location and time." : "Select Replay lookup to send the simulated DNS query for google.com."}
+              status={!dnsResolved
+                ? "Select Run lookup to send the simulated DNS query for google.com."
+                : dnsIpRevealed
+                  ? `One possible IPv4 answer is ${exampleGoogleIpv4}. DNS answers for google.com can vary by location and time.`
+                  : "The resolver returned an address. Select Reveal example IP to inspect one possible IPv4 answer."}
             >
-              <div className={"dns-flow " + (dnsResolved ? "resolved" : "")} aria-hidden="true">
+              <div className={"dns-flow " + (dnsResolved ? "resolved " : "") + (dnsIpRevealed ? "ip-revealed" : "")} aria-hidden="true">
                 <div className="dns-value domain-value"><small>Example domain</small><strong>google.com</strong></div>
                 <div className="dns-book"><span>DNS</span><i>?</i><b className="page-flip" /></div>
-                <div className="dns-value ip-value"><small>DNS response</small><strong>{dnsResolved ? "IP address(es)" : "Waiting…"}</strong></div>
+                <div className="dns-value ip-value"><small>{dnsIpRevealed ? "Example A record" : "DNS response"}</small><strong>{dnsIpRevealed ? exampleGoogleIpv4 : dnsResolved ? "Address ready" : "Waiting…"}</strong></div>
                 <PacketFace key={dnsRun + "-query"} className="dns-packet dns-query" />
                 {dnsResolved && <PacketFace key={dnsRun + "-response"} className="dns-packet dns-response" />}
               </div>
@@ -528,6 +575,16 @@ export default function Home() {
                 {routeBlocked ? "Restore direct path" : "Block direct path"}
               </button>
             </div>
+            <PredictionCheck
+              question="If the direct link fails and routers learn an alternate route, what can happen next?"
+              choices={[
+                { id: "stop", label: "All later traffic must stop permanently" },
+                { id: "instant", label: "Every router switches paths at exactly the same instant" },
+                { id: "alternate", label: "Later packets can use the alternate path after routing updates" },
+              ]}
+              correctChoiceId="alternate"
+              explanation="Routing protocols and forwarding tables need time to update. Once an alternate route is available, later packets can be forwarded along it."
+            />
             <ConceptLayout
               explanation="Each router uses the destination IP and its forwarding table to select the next hop. If a link fails and another route exists, later packets can use it after routes update."
               takeaway="When routing has an alternate, later packets can take a different path to the same destination."
@@ -553,6 +610,16 @@ export default function Home() {
               <div><span className="mini-kicker">Transport behavior</span><h3>Compare built-in reliability with direct datagram delivery.</h3></div>
               <button className="small-button yellow-button" type="button" onClick={() => setRaceRun((value) => value + 1)}>Replay comparison ↻</button>
             </div>
+            <PredictionCheck
+              question="For a live video call, which delivery tradeoff is commonly useful?"
+              choices={[
+                { id: "fresh", label: "Favor fresh media over waiting for every late packet" },
+                { id: "wait", label: "Always pause the call until every packet is recovered" },
+                { id: "none", label: "Use no transport protocol at all" },
+              ]}
+              correctChoiceId="fresh"
+              explanation="Real-time media commonly uses UDP-based transports and application-level recovery so late data does not always stall newer audio or video. TCP-based fallback paths can still be used."
+            />
             <ConceptLayout
               explanation="TCP acknowledges data, retransmits missing data, and delivers a reliable byte stream in order. UDP sends independent datagrams without built-in delivery, ordering, or retransmission."
               takeaway="TCP provides reliable, ordered delivery. UDP leaves recovery and timing strategies to the application, but it does not guarantee arrival or low delay."
@@ -626,12 +693,12 @@ export default function Home() {
               className="performance-concept-layout"
               explanation="Round-trip latency adds waiting to connection and request–response exchanges. Available bandwidth limits large transfers. Loss can trigger recovery or leave gaps in real-time media."
               takeaway="Real quality depends on delay, available bandwidth, loss—and sometimes jitter—not one speed number."
-              status={performance.biggest === "no major bottleneck" ? "Within this teaching model, no single input stands out." : "Within this teaching model, the largest drag is " + performance.biggest + "."}
+              status={<>Within this teaching model, the largest time contribution is <strong>{performance.biggest.label}</strong> (~{performance.biggest.seconds.toFixed(1)} seconds).</>}
             >
               <div className="performance-grid">
-                <label><span>Round-trip latency <small>waiting per round trip</small></span><output>{latency} ms</output><input type="range" min="10" max="400" step="10" value={latency} onChange={(event) => setLatency(Number(event.target.value))} /></label>
-                <label><span>Available bandwidth <small>transfer capacity</small></span><output>{bandwidth} Mbps</output><input type="range" min="2" max="100" step="2" value={bandwidth} onChange={(event) => setBandwidth(Number(event.target.value))} /></label>
-                <label><span>Packet loss <small>dropped packets</small></span><output>{packetLoss}%</output><input type="range" min="0" max="10" step="1" value={packetLoss} onChange={(event) => setPacketLoss(Number(event.target.value))} /></label>
+                <label><span>Round-trip latency <small>waiting per round trip</small></span><output>{latency} ms</output><input aria-label="Round-trip latency" type="range" min="10" max="400" step="10" value={latency} onChange={(event) => setLatency(Number(event.target.value))} /></label>
+                <label><span>Available bandwidth <small>transfer capacity</small></span><output>{bandwidth} Mbps</output><input aria-label="Available bandwidth" type="range" min="2" max="100" step="2" value={bandwidth} onChange={(event) => setBandwidth(Number(event.target.value))} /></label>
+                <label><span>Packet loss <small>dropped packets</small></span><output>{packetLoss}%</output><input aria-label="Packet loss" type="range" min="0" max="10" step="1" value={packetLoss} onChange={(event) => setPacketLoss(Number(event.target.value))} /></label>
               </div>
               <div className="quality-scene">
                 <div
@@ -649,6 +716,10 @@ export default function Home() {
             </ConceptLayout>
           </div>
         </section>
+
+        <div id="playground" className="playground-wrap">
+          <JourneyPlayground motionPaused={motionPaused} />
+        </div>
 
         <section className="finish-panel" aria-labelledby="finish-title">
           <span className="finish-burst" aria-hidden="true">★</span>
