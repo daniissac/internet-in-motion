@@ -2796,6 +2796,11 @@ button:disabled {
   margin: 0;
 }
 
+.stage-feedback .result-line {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
 .stage-feedback .takeaway {
   color: var(--ink);
   background: var(--pale-mint);
