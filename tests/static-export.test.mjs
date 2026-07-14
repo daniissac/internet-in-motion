@@ -15,11 +15,16 @@ test("exports the complete branded experience", async () => {
   assert.match(html, /TCP or QUIC/);
   assert.match(html, /https:\/\/google\.com/);
   assert.match(html, /One journey/);
-  assert.match(html, /If no cached answer/);
+  assert.match(html, /If no usable cached address/);
+  assert.match(html, /Reveal example IP/);
+  assert.match(html, /Continuous journey thread/);
+  assert.match(html, /Quick prediction/);
+  assert.match(html, /Packet Playground: run the whole request journey/);
+  assert.match(html, /Your event log will appear here/);
   assert.match(html, /Teaching model—not a measurement/);
   assert.match(html, /https:\/\/daniissac\.com\/internet-in-motion\//);
   assert.match(html, /\/internet-in-motion\/_next\//);
-  assert.doesNotMatch(html, /Packet Playground|site-creator-vinext-starter|codex-preview/i);
+  assert.doesNotMatch(html, /site-creator-vinext-starter|codex-preview/i);
   assert.doesNotMatch(html, /visually explained by/i);
   assert.doesNotMatch(html, /internetinmotion\.test|203\.0\.113\.42/i);
   assert.doesNotMatch(html, /phase-number/);
