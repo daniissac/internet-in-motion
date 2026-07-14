@@ -2,6 +2,10 @@
 
 Internet in Motion is a guided, beginner-friendly exploration of what happens when someone opens a website. It keeps each explanation beside its moving visual so learners can connect a networking idea with the behavior it produces.
 
+**[Start the interactive lesson](https://daniissac.com/internet-in-motion/)** · [View the source](https://github.com/daniissac/internet-in-motion)
+
+[![Internet in Motion preview](public/og.png)](https://daniissac.com/internet-in-motion/)
+
 The experience follows one recognizable request from a device to a website and back. Learners can pause the motion, step through the request, make predictions, change network conditions, and replay scenes at their own pace.
 
 ## The learning journey
@@ -58,3 +62,11 @@ npm test
 ```
 
 The production build is a static export written to `out/`.
+
+## Contributing
+
+Bug reports, corrections, and ideas for new learning interactions are welcome through [GitHub Issues](https://github.com/daniissac/internet-in-motion/issues).
+
+## License
+
+[MIT](LICENSE)
