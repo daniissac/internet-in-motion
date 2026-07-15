@@ -758,7 +758,11 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="site-footer"><span>Internet in Motion</span><span>Networking, visually explained.</span></footer>
+      <footer className="site-footer">
+        <span>Internet in Motion</span>
+        <span>Networking, visually explained.</span>
+        <a href="https://github.com/daniissac/internet-in-motion" target="_blank" rel="noreferrer">View source on GitHub ↗</a>
+      </footer>
     </div>
   );
 }
