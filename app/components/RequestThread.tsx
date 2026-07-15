@@ -26,7 +26,7 @@ export type RequestThreadProps = {
   onStageChange?: (stage: RequestThreadStage, index: number) => void;
 };
 
-const playbackDelay = 1650;
+const playbackDelay = 4000;
 
 function subscribeToReducedMotion(callback: () => void) {
   if (typeof window === "undefined" || !window.matchMedia) return () => undefined;
@@ -69,18 +69,18 @@ export default function RequestThread({
         id: "device",
         shortLabel: "Device",
         location: deviceName,
-        protocol: "Browser action",
+        protocol: "Browser",
         action: `Open ${siteName}`,
-        why: "The browser needs an IP address before it can contact the site.",
+        why: "The browser needs the site's network address before it can contact it.",
         direction: "local",
       },
       {
         id: "dns-query",
         shortLabel: "DNS query",
-        location: "Recursive DNS resolver",
+        location: "DNS resolver",
         protocol: "DNS",
-        action: `Ask for ${siteName}`,
-        why: "DNS translates the host name into one or more usable IP addresses.",
+        action: `Look up ${siteName}`,
+        why: "The Domain Name System (DNS) looks up one or more IP addresses for the site name.",
         direction: "out",
         dnsOnly: true,
       },
@@ -89,8 +89,8 @@ export default function RequestThread({
         shortLabel: "DNS answer",
         location: deviceName,
         protocol: "DNS answer",
-        action: "Return IP address(es)",
-        why: "The answer gives the browser a destination; it may vary by network, place, and time.",
+        action: "Return an IP address",
+        why: "The answer gives the browser a destination. It can vary by network, place, and time.",
         direction: "return",
         dnsOnly: true,
       },
@@ -98,18 +98,18 @@ export default function RequestThread({
         id: "connection",
         shortLabel: "Connect",
         location: "Device ↔ destination server",
-        protocol: "TCP + TLS, or QUIC with TLS 1.3",
+        protocol: "TCP and TLS, or QUIC",
         action: "Create a secure transport",
-        why: "The connection authenticates the server and protects the HTTP exchange.",
+        why: "TCP or QUIC establishes the transport. TLS—built into QUIC—checks the server's identity and encrypts the exchange.",
         direction: "out",
       },
       {
         id: "request",
         shortLabel: "Request",
         location: "Destination web server",
-        protocol: "HTTPS",
-        action: "Send GET /",
-        why: "The HTTP request tells the server which resource the browser wants.",
+        protocol: "HTTPS request",
+        action: "Ask for the home page",
+        why: "The request tells the server which page or file the browser wants.",
         direction: "out",
       },
       {
@@ -117,17 +117,17 @@ export default function RequestThread({
         shortLabel: "Response",
         location: "Server → browser",
         protocol: "HTTPS response",
-        action: "Return HTML and data",
-        why: "Response bytes travel back over the established secure connection.",
+        action: "Send the requested page data",
+        why: "The first response often carries HTML. More requests can fetch styles, scripts, images, and other files.",
         direction: "return",
       },
       {
         id: "render",
         shortLabel: "Render",
         location: deviceName,
-        protocol: "Browser processing",
+        protocol: "Browser",
         action: "Parse and display the page",
-        why: "The browser can render progressively while it requests additional page resources.",
+        why: "The browser can start displaying the page while it requests the remaining files.",
         direction: "local",
       },
     ];
@@ -186,34 +186,33 @@ export default function RequestThread({
     <section className={`${styles.requestThread} ${className}`.trim()} aria-labelledby={`${scrubberId}-title`}>
       <div className={styles.headingRow}>
         <div>
-          <p className={styles.eyebrow}>Continuous journey thread</p>
-          <h3 id={`${scrubberId}-title`}>Follow one page-opening journey from name to page</h3>
+          <p className={styles.eyebrow}>Chapter 7 synthesis</p>
+          <h3 id={`${scrubberId}-title`}>Put the whole page-opening journey together</h3>
         </div>
-        <span className={styles.requestIdentity} aria-label="Journey marker 27">
+        <span className={styles.requestIdentity}>
           <span className={styles.packetFace} aria-hidden="true" />
-          JOURNEY 27
+          Your journey
         </span>
       </div>
 
-      <div
-        className={styles.journey}
-        style={journeyStyle}
-        role="img"
-        aria-label={`Journey marker 27 is at ${currentStage.shortLabel}, stage ${currentIndex + 1} of ${stages.length}.`}
-      >
+      <div className={styles.journey} style={journeyStyle}>
         <div className={styles.rail} aria-hidden="true">
           <span className={styles.completedRail} />
           <span className={styles.traveler} data-direction={currentStage.direction}>
             <span className={styles.miniFace} />
-            <b>27</b>
           </span>
         </div>
-        <ol className={styles.stages}>
+        <ol className={styles.stages} aria-label="Steps in the page-opening journey">
           {stages.map((stage, index) => {
             const state = index === currentIndex ? "current" : index < currentIndex ? "complete" : "upcoming";
             return (
-              <li key={stage.id} className={styles.stage} data-state={state}>
-                <span className={styles.stageDot} aria-hidden="true">{index < stageIndex ? "✓" : index + 1}</span>
+              <li
+                key={stage.id}
+                className={styles.stage}
+                data-state={state}
+                aria-current={state === "current" ? "step" : undefined}
+              >
+                <span className={styles.stageDot} aria-hidden="true">{index < currentIndex ? "✓" : index + 1}</span>
                 <span>{stage.shortLabel}</span>
               </li>
             );
@@ -223,13 +222,13 @@ export default function RequestThread({
 
       <div className={styles.details} aria-live="polite" aria-atomic="true">
         <div className={styles.detailField}>
-          <span>Current device / location</span>
+          <span>Where this happens</span>
           <strong>{currentStage.location}</strong>
         </div>
         <div className={styles.detailField}>
-          <span>Protocol / action</span>
-          <strong>{currentStage.protocol}</strong>
-          <small>{currentStage.action}</small>
+          <span>What happens</span>
+          <strong>{currentStage.action}</strong>
+          <small>{currentStage.protocol}</small>
         </div>
         <div className={`${styles.detailField} ${styles.whyField}`}>
           <span>Why it matters</span>
@@ -238,7 +237,7 @@ export default function RequestThread({
       </div>
 
       <div className={styles.controls}>
-        <div className={styles.buttonGroup} aria-label="Request playback controls">
+        <div className={styles.buttonGroup} aria-label="Journey playback controls">
           <button type="button" onClick={() => selectStage(currentIndex - 1)} disabled={isFirst}>
             ← Previous
           </button>
@@ -260,7 +259,7 @@ export default function RequestThread({
 
         <label className={styles.scrubber} htmlFor={scrubberId}>
           <span>
-            Request progress
+            Journey progress
             <output htmlFor={scrubberId}>Stage {currentIndex + 1} of {stages.length}</output>
           </span>
           <input
@@ -277,7 +276,7 @@ export default function RequestThread({
       </div>
 
       <p className={styles.note} id={`${scrubberId}-note`}>
-        The same journey marker stays visible, but it does not represent one packet reused end to end: each stage can create different packets and exchanges. DNS stages disappear when a usable address is already cached.
+        The marker follows the journey, not one physical packet. Each step can create new packets and exchanges. If the browser already knows the site’s address, the DNS steps are skipped.
         {prefersReducedMotion ? " Autoplay is off for your reduced-motion preference; use Previous, Next, Replay, or the scrubber." : ""}
         {motionPaused ? " Autoplay is also paused by the page-wide motion control." : ""}
       </p>

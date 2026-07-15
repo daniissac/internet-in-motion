@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 const title = "Internet in Motion — Networking, visually explained";
-const description = "Follow a website request through DNS, packets, routing, protocols, and performance in eight interactive chapters.";
+const description = "Learn networking from the beginning through eight plain-language, interactive chapters that follow a website journey from your device and back.";
 const canonicalUrl = "https://daniissac.com/internet-in-motion/";
 const socialImage = "https://daniissac.com/internet-in-motion/og.png";
 const basePath = process.env.GITHUB_PAGES === "1" ? "/internet-in-motion" : "";

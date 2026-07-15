@@ -428,3 +428,66 @@
     transform: none;
   }
 }
+
+/* Support the revised beginner copy without replacing the stable journey layout. */
+.requestThread,
+.headingRow > div,
+.detailField {
+  min-width: 0;
+}
+
+.headingRow h3,
+.stage > span:last-child,
+.detailField strong,
+.detailField small {
+  overflow-wrap: anywhere;
+}
+
+.requestIdentity {
+  max-width: 100%;
+  min-height: 44px;
+}
+
+.stage {
+  font-size: 13px;
+}
+
+.detailField small {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.buttonGroup button {
+  font-size: 14px;
+}
+
+.buttonGroup button:focus-visible,
+.scrubber input:focus-visible {
+  outline: 4px solid var(--thread-coral);
+  outline-offset: 3px;
+}
+
+.scrubber > span {
+  font-size: 13px;
+}
+
+.scrubber input {
+  min-height: 44px;
+}
+
+.note {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+@media (min-width: 901px) {
+  .journey {
+    min-height: 118px;
+    padding-top: 18px;
+    padding-bottom: 2px;
+  }
+
+  .rail {
+    top: 30px;
+  }
+}
