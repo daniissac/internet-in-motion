@@ -2210,462 +2210,128 @@ button:disabled {
   to { opacity: 1; transform: scaleX(1); }
 }
 
-@media (max-width: 1180px) {
-  .chapter-progress {
-    grid-template-columns: 126px minmax(0, 1fr);
+@media (min-width: 901px) and (max-width: 1180px) {
+  .mission-route.hero-route {
+    grid-template-columns: repeat(5, minmax(170px, 1fr));
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    padding-bottom: 14px;
+    scroll-snap-type: inline proximity;
   }
 
-  .chapter-progress a span {
-    font-size: 10px;
+  .mission-route .route-stage {
+    scroll-snap-align: start;
+  }
+}
+@media (max-width: 1050px) {
+  .chapter-section > .play-card {
+    min-height: 0;
+    transform: none;
   }
 
-  .hero-route {
+  .concept-layout {
     grid-template-columns: 1fr;
-    max-width: 620px;
-    margin-inline: auto;
-    padding-top: 18px;
+    grid-template-areas:
+      "explanation"
+      "motion"
+      "feedback";
   }
 
-  .route-stage,
-  .route-stage:last-child {
-    grid-template-columns: 1fr;
-    justify-items: center;
-  }
-
-  .route-station {
-    width: 100%;
-    min-height: 168px;
-    grid-template-columns: 140px minmax(130px, 220px);
-    grid-template-rows: auto auto;
-    justify-content: center;
-    align-items: center;
-    column-gap: 28px;
-  }
-
-  .speech-bubble {
-    grid-column: 1 / -1;
-    margin: 0 0 4px;
-  }
-
-  .station-tile {
-    grid-column: 1;
-    grid-row: 2;
-  }
-
-  .station-label {
-    grid-column: 2;
-    grid-row: 2;
-    margin: 0;
-    font-size: 14px;
-  }
-
-  .route-connector {
+  .concept-explanation::after {
     width: 0;
-    height: 54px;
+    height: 18px;
+    left: 30px;
+    top: auto;
+    bottom: -18px;
     border-top: 0;
-    border-left: 4px dotted var(--line);
+    border-left: 3px dotted var(--ink);
   }
 
-  .route-connector::after {
-    content: "⌄";
-    left: -13px;
-    right: auto;
-    top: 28px;
+  .stage-feedback {
+    grid-template-columns: minmax(0, 1.2fr) minmax(220px, 0.8fr);
+    align-items: stretch;
   }
 
-  .hero-packet {
-    left: -19px;
-    top: -2px;
-    animation-name: heroPacketVertical;
-  }
-
-  .chapter-section {
-    grid-template-columns: 1fr;
-    min-height: auto;
+  .motion-stage {
+    min-height: 390px;
   }
 }
 
-@keyframes heroPacketVertical {
-  from { top: -2px; transform: rotate(-8deg); }
-  to { top: 33px; transform: rotate(8deg); }
-}
-
-@media (max-width: 900px) {
-  .site-header,
-  .site-shell,
-  .site-footer {
-    width: min(760px, calc(100% - 28px));
-  }
-
-  .beginner-pill {
-    display: none;
-  }
-
-  .chapter-progress {
-    grid-template-columns: 1fr;
-    gap: 8px;
-    padding-inline: 14px;
-  }
-
-  .progress-label {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 14px;
-  }
-
-  .chapter-progress a span {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-  }
-
-  .chapter-progress ol::before {
-    top: 17px;
-  }
-
-  .hero {
-    grid-template-columns: 1fr;
-    gap: 28px;
-    padding-top: 54px;
-  }
-
-  .hero h1 {
-    font-size: clamp(62px, 14vw, 100px);
-  }
-
-  .hero-intro {
-    max-width: 640px;
-  }
-
-  .route-lab {
-    padding: 24px 18px 20px;
-    border-radius: 28px;
-  }
-
-  .request-thread-shell {
-    margin: 64px 0 74px;
-    padding: 24px 18px;
-    border-radius: 28px;
-  }
-
-  .playground-wrap {
-    margin-top: 78px;
-    scroll-margin-top: 112px;
-  }
-
-  .lab-heading {
+@media (max-width: 720px) {
+  .chapter-masthead {
     align-items: flex-start;
+    flex-direction: column;
+    gap: 11px;
   }
 
-  .lab-actions {
-    justify-content: flex-end;
+  .chapter-masthead h2 {
+    font-size: clamp(40px, 13vw, 60px);
   }
 
-  .local-map {
+  .stage-feedback {
     grid-template-columns: 1fr;
-    max-width: 340px;
-    margin-inline: auto;
   }
 
-  .local-path {
-    width: 0;
+  .motion-stage {
+    min-height: 340px;
+    padding: 15px 10px;
+  }
+
+  .web-dns-art,
+  .web-handshake-art,
+  .web-request-art,
+  .web-files-art {
+    grid-template-columns: 1fr;
+  }
+
+  .web-dns-art .web-ticket,
+  .web-dns-art .web-art-path,
+  .web-dns-art .web-dns-book,
+  .web-dns-art .web-ip-ticket {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .web-art-path,
+  .request-track,
+  .handshake-line,
+  .file-stream {
+    width: 5px;
     height: 74px;
     justify-self: center;
-    border-top: 0;
-    border-left: 4px dotted var(--ink);
+    background-image: repeating-linear-gradient(transparent 0 5px, var(--ink) 5px 10px);
+    background-repeat: repeat-y;
+    background-position: center;
   }
 
-  .local-map.cable .local-path:first-of-type {
-    border-top: 0;
-    border-left-style: solid;
-  }
-
-  .local-map.wifi .local-path:first-of-type {
-    border-top: 0;
-    border-left-style: double;
-    border-left-width: 7px;
-  }
-
-  .local-path::after {
-    content: "⌄";
-    right: auto;
-    left: -13px;
-    top: 46px;
-  }
-
-  .local-path > span:not(.packet-face) {
-    top: 28px;
-    left: 18px;
-  }
-
-  .local-packet {
-    left: -19px;
+  .web-moving-packet,
+  .request-packet {
+    left: -15px;
     top: 0;
     animation-name: heroPacketVertical;
   }
 
-  .dns-flow {
-    grid-template-columns: 1fr;
-    max-width: 380px;
-    margin-inline: auto;
-  }
-
-  .dns-flow::before,
-  .dns-flow::after,
-  .dns-packet {
+  .handshake-out,
+  .handshake-back {
     display: none;
   }
 
-  .dns-book {
-    justify-self: center;
+  .handshake-line i {
+    white-space: nowrap;
   }
 
-  .route-map {
-    grid-template-columns: 72px minmax(0, 1fr) 72px;
-    gap: 28px;
-    max-width: 700px;
-    margin-inline: auto;
-  }
-
-  .map-endpoint {
-    max-width: none;
-    width: auto;
-    justify-self: center;
-  }
-
-  .route-junction::before {
-    width: calc(50% + 28px);
-  }
-
-  .map-path::after {
-    width: 82px;
-  }
-
-  .direct-path::after {
-    transform: rotate(38deg);
-  }
-
-  .detour-path::after {
-    transform: rotate(-38deg);
-  }
-
-  .protocol-lane {
+  .browser-scene {
     grid-template-columns: 1fr;
   }
 
-  .browser-scene,
-  .quality-scene {
-    grid-template-columns: 1fr;
+  .website-concept-layout .motion-stage,
+  .performance-concept-layout .motion-stage {
+    min-height: 0;
   }
 
   .performance-grid {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 620px) {
-  .site-header,
-  .site-shell,
-  .site-footer {
-    width: calc(100% - 20px);
-  }
-
-  .site-header {
-    align-items: center;
-    min-height: 72px;
-  }
-
-  .brand {
-    font-size: 11px;
-  }
-
-  .brand-face {
-    width: 36px;
-    height: 36px;
-  }
-
-  .motion-toggle {
-    max-width: 96px;
-    padding: 7px 10px;
-    font-size: 10px;
-  }
-
-  .chapter-progress b {
-    width: 31px;
-    height: 31px;
-    font-size: 11px;
-  }
-
-  .chapter-progress ol::before {
-    top: 15px;
-  }
-
-  .journey-progress-marker {
-    top: -8px;
-  }
-
-  .request-thread-shell {
-    padding: 20px 14px;
-    border-radius: 24px;
-    box-shadow: 0 9px 0 var(--coral);
-  }
-
-  .hero {
-    padding-top: 38px;
-  }
-
-  .hero h1 {
-    font-size: clamp(52px, 16vw, 76px);
-  }
-
-  .hero h1 span::after {
-    height: 14px;
-  }
-
-  .hero-intro {
-    padding: 20px;
-  }
-
-  .lab-heading,
-  .play-card-heading,
-  .stacked-mobile {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .lab-actions {
-    justify-content: flex-start;
-  }
-
-  .live-pill {
-    align-self: flex-start;
-  }
-
-  .route-station {
-    grid-template-columns: 112px minmax(95px, 160px);
-    column-gap: 16px;
-  }
-
-  .station-tile {
-    width: 108px;
-  }
-
-  .status-strip,
-  .result-line {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .chapter-section {
-    gap: 28px;
-    margin: 58px 0;
-    padding: 28px 18px;
-    border-radius: 30px;
-    box-shadow: 0 11px 0 var(--chapter-shadow);
-  }
-
-  .chapter-section::before {
-    width: 96px;
-    height: 96px;
-    right: -36px;
-    top: -34px;
-  }
-
-  .chapter-copy h2,
-  .finish-panel h2 {
-    font-size: clamp(40px, 13vw, 58px);
-  }
-
-  .play-card {
-    padding: 20px 15px;
-    border-radius: 23px;
-    box-shadow: 6px 6px 0 var(--ink);
-  }
-
-  .hello-scene {
-    grid-template-columns: 1fr;
-    max-width: 240px;
-    margin-inline: auto;
-  }
-
-  .hello-track {
-    width: 0;
-    height: 70px;
-    justify-self: center;
-    border-top: 0;
-    border-left: 4px dotted var(--ink);
-  }
-
-  .hello-track::after {
-    content: "⌄";
-    right: auto;
-    left: -13px;
-    top: 42px;
-  }
-
-  .hello-track .packet-face {
-    left: -19px;
-    top: 0;
-  }
-
-  .hello-moving {
-    animation-name: heroPacketVertical;
-  }
-
-  .packet-message {
-    flex-direction: column;
-  }
-
-  .letter-packet {
-    width: 51px;
-    height: 59px;
-  }
-
-  .protocol-track {
-    overflow: hidden;
-  }
-
-  .web-stepper {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .browser-page {
-    padding: 16px;
-  }
-
-  .finish-panel {
-    margin-top: 80px;
-    border-radius: 30px;
-  }
-
-  .site-footer {
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  *,
-  *::before,
-  *::after {
-    animation-duration: 1ms !important;
-    animation-delay: 0ms !important;
-    transition-duration: 1ms !important;
-  }
-
-  .reveal-ready {
-    opacity: 1;
-    transform: none;
   }
 }
 
@@ -3938,8 +3604,40 @@ button:disabled {
   background: var(--yellow);
 }
 
+.connection-key {
+  background: var(--sky);
+}
+
 .return-key {
   background: var(--mint);
+}
+
+.website-synthesis {
+  margin-top: 30px;
+  padding-top: 8px;
+  border-top: 3px dashed rgb(16 36 79 / 24%);
+}
+
+.website-synthesis > .chapter-bridge {
+  max-width: none;
+  margin-top: 14px;
+}
+
+.chapter-seven-thread {
+  margin: 22px 0 0;
+  padding: clamp(20px, 3vw, 34px);
+  box-shadow: 0 9px 0 var(--coral);
+}
+
+.performance-guide {
+  margin: 0 0 18px;
+  padding: 13px 15px;
+  border: 2px dashed var(--ink);
+  border-radius: 14px;
+  background: var(--paper);
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.5;
 }
 
 .mission-route,
@@ -4442,6 +4140,10 @@ html:has(.motion-paused) {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   .route-map .map-packet {
     display: none !important;
   }
@@ -4476,4 +4178,1464 @@ html:has(.motion-paused) {
     opacity: 1 !important;
     transform: none !important;
   }
+}
+
+/* Beginner copy support and consolidated layout repair. */
+html {
+  scroll-padding-top: 96px;
+}
+
+#overview,
+.chapter-section,
+.playground-wrap {
+  scroll-margin-top: 0;
+}
+
+.concept-explanation::before {
+  content: none;
+}
+
+.concept-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--blue);
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: 0.09em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.chapter-lead {
+  max-width: 1040px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px 18px;
+  margin: -8px 0 22px;
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.chapter-lead strong {
+  font-size: clamp(16px, 1.35vw, 19px);
+  font-weight: 850;
+}
+
+.chapter-lead span {
+  opacity: 0.82;
+}
+
+.synthesis-intro {
+  max-width: 920px;
+  margin: 0 0 22px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.chapter-progress.is-overview .journey-progress-marker {
+  display: none;
+}
+
+.chapter-section > .play-card {
+  min-height: 0;
+  transform: none;
+  transition: none;
+}
+
+.chapter-section.reveal-ready {
+  transform: none;
+}
+
+.concept-layout {
+  grid-template-columns: minmax(0, 1.5fr) minmax(340px, 0.78fr);
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "motion explanation"
+    "feedback feedback";
+}
+
+.stage-feedback {
+  grid-template-columns: minmax(0, 1.3fr) minmax(240px, 0.7fr);
+  align-items: stretch;
+}
+
+.chapter-seven-thread {
+  margin: 74px 0 88px;
+  padding: clamp(24px, 4vw, 46px);
+  scroll-margin-top: 96px;
+  box-shadow: 0 14px 0 var(--coral);
+}
+
+.performance-guide {
+  margin: 0 0 16px;
+  padding: 10px 0 10px 14px;
+  border: 0;
+  border-left: 4px solid var(--blue);
+  border-radius: 0;
+  background: transparent;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .mission-route,
+  .mission-route.hero-route {
+    grid-template-columns: 1fr;
+    max-width: 540px;
+    margin-inline: auto;
+  }
+
+  .combined-route {
+    min-height: 0;
+  }
+
+  .mission-route .route-stage,
+  .mission-route .route-stage:last-child {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .mission-route .route-stage > .route-connector {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .dns-side-lookup {
+    width: 100%;
+    margin: 10px 0 8px;
+    position: static;
+    transform: none;
+  }
+
+  .mission-route .dns-branch-station {
+    width: 100%;
+    min-height: 154px;
+  }
+
+  .mission-route .route-station {
+    width: 100%;
+    min-height: 154px;
+    grid-template-columns: 118px minmax(130px, 210px);
+    grid-template-rows: auto auto;
+    justify-content: center;
+    column-gap: 24px;
+  }
+
+  .mission-flow .mission-route .speech-bubble {
+    grid-column: 1 / -1;
+    margin: 0 0 3px;
+  }
+
+  .mission-route .station-tile {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .mission-route .station-label {
+    grid-column: 2;
+    grid-row: 2;
+    margin: 0;
+  }
+
+  .mission-flow .route-connector {
+    width: 4px;
+    height: 46px;
+    background-image: repeating-linear-gradient(transparent 0 5px, var(--ink) 5px 10px);
+    background-position: center;
+    background-repeat: repeat-y;
+    background-size: 4px auto;
+  }
+
+  .mission-flow .route-connector::after {
+    content: "⇅";
+    left: -10px;
+    right: auto;
+    top: 20px;
+  }
+
+  .mission-packet {
+    left: -15px;
+    right: auto;
+    top: -2px;
+  }
+
+  .lookup-query,
+  .website-request {
+    animation-name: missionForwardVertical;
+  }
+
+  .lookup-answer,
+  .website-response {
+    left: -15px;
+    right: auto;
+    top: auto;
+    bottom: -2px;
+    animation-name: missionBackwardVertical;
+  }
+}
+
+@media (max-width: 1050px) {
+  .concept-layout {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "motion"
+      "explanation"
+      "feedback";
+  }
+
+  .concept-explanation::after {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .reveal-ready {
+    transform: translateY(18px);
+  }
+
+  .reveal-ready.is-visible {
+    transform: none;
+  }
+
+  .chapter-section {
+    overflow: visible;
+    scroll-margin-top: 104px;
+  }
+
+  .chapter-lead {
+    flex-wrap: wrap;
+    margin-top: -4px;
+  }
+
+  .chapter-seven-thread {
+    margin: 58px 0 72px;
+  }
+}
+
+@media (max-width: 720px) {
+  html {
+    scroll-padding-top: 82px;
+  }
+
+  .site-header,
+  .site-shell,
+  .site-footer {
+    width: min(100% - 28px, 1440px);
+  }
+
+  .site-header {
+    min-height: 66px;
+    gap: 10px;
+  }
+
+  .brand {
+    gap: 8px;
+    font-size: 11px;
+    letter-spacing: 0.07em;
+  }
+
+  .brand-face {
+    width: 34px;
+    height: 34px;
+  }
+
+  .beginner-pill {
+    display: none;
+  }
+
+  .motion-toggle {
+    min-height: 40px;
+    padding: 7px 10px;
+    font-size: 11px;
+  }
+
+  #overview,
+  .chapter-section,
+  .chapter-seven-thread,
+  .playground-wrap {
+    scroll-margin-top: 0;
+  }
+
+  .chapter-progress {
+    min-height: 64px;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 5px;
+    padding: 6px 10px 8px;
+  }
+
+  .progress-label span {
+    display: none;
+  }
+
+  .progress-label strong {
+    font-size: 11px;
+  }
+
+  .chapter-progress a span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .chapter-progress a {
+    min-height: 38px;
+  }
+
+  .chapter-progress b {
+    width: 30px;
+    height: 30px;
+    font-size: 11px;
+  }
+
+  .chapter-progress ol::before {
+    top: 14px;
+  }
+
+  .journey-progress-marker {
+    top: -7px;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    align-items: stretch;
+    padding: 42px 0 30px;
+  }
+
+  .hero-title-wrap,
+  .hero-intro {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .hero-intro {
+    padding: 20px;
+    border-radius: 24px;
+  }
+
+  .hero-intro > p {
+    margin-bottom: 16px;
+    font-size: 18px;
+  }
+
+  .route-lab {
+    padding: 20px 14px 18px;
+    border-radius: 28px;
+    box-shadow: 0 10px 0 var(--blue);
+  }
+
+  .lab-heading,
+  .play-card-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .lab-actions {
+    width: 100%;
+  }
+
+  .chapter-section {
+    margin: 48px 0;
+    padding: 24px 16px;
+    border-radius: 30px;
+    box-shadow: 0 10px 0 var(--chapter-shadow);
+  }
+
+  .chapter-masthead {
+    gap: 9px;
+    margin-bottom: 14px;
+  }
+
+  .chapter-masthead h2 {
+    font-size: clamp(38px, 11vw, 52px);
+    line-height: 0.98;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .chapter-lead {
+    display: block;
+    margin: 0 0 18px;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .chapter-lead strong {
+    display: block;
+    margin-bottom: 3px;
+    font-size: 15px;
+  }
+
+  .play-card {
+    padding: 18px 14px;
+  }
+
+  .play-card-heading h3 {
+    font-size: 20px;
+    line-height: 1.25;
+  }
+
+  .concept-layout {
+    gap: 14px;
+    margin-top: 18px;
+  }
+
+  .motion-stage {
+    min-height: 320px;
+  }
+
+  .local-map {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    margin-top: 22px;
+  }
+
+  .local-node {
+    width: 100%;
+    min-height: 104px;
+    gap: 12px;
+  }
+
+  .local-path,
+  .local-map.cable .local-path:first-of-type,
+  .local-map.wifi .local-path:first-of-type {
+    width: 4px;
+    height: 54px;
+    justify-self: center;
+    border: 0;
+    background-image: repeating-linear-gradient(180deg, var(--ink) 0 5px, transparent 5px 13px);
+    background-position: center;
+    background-repeat: repeat-y;
+    background-size: 4px auto;
+  }
+
+  .local-map.cable .local-path:first-of-type {
+    background-image: linear-gradient(var(--ink), var(--ink));
+  }
+
+  .local-map.wifi .local-path:first-of-type {
+    background-image: repeating-linear-gradient(180deg, var(--blue) 0 4px, transparent 4px 11px);
+  }
+
+  .local-path::after {
+    content: "⌄";
+    right: auto;
+    left: -9px;
+    top: 17px;
+    font-size: 25px;
+  }
+
+  .local-path > span:not(.packet-face) {
+    left: 14px;
+    top: 18px;
+  }
+
+  .local-packet {
+    left: -15px;
+    top: -2px;
+  }
+
+  .chapter-section.is-active .local-packet {
+    animation-name: localPacketVertical;
+  }
+
+  .dns-flow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    margin-top: 24px;
+  }
+
+  .dns-flow::before {
+    width: 0;
+    height: calc(100% - 150px);
+    left: 50%;
+    top: 75px;
+    border-top: 0;
+    border-left: 4px dotted var(--ink);
+  }
+
+  .dns-flow::after {
+    display: none;
+  }
+
+  .dns-value {
+    width: 100%;
+    min-height: 104px;
+  }
+
+  .dns-book {
+    justify-self: center;
+  }
+
+  .dns-flow .dns-packet {
+    display: none !important;
+  }
+
+  .keep-going {
+    box-sizing: border-box;
+    right: 6px;
+    left: auto;
+    width: calc(100% - 12px);
+    max-width: calc(100% - 12px);
+    font-size: 10px;
+    line-height: 1.15;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .concept-explanation {
+    padding: 15px;
+    font-size: 15px;
+  }
+
+  .stage-feedback {
+    grid-template-columns: 1fr;
+  }
+
+  .small-button,
+  .segmented button,
+  .use-case-buttons button,
+  .web-stepper button,
+  .step-controls button {
+    min-height: 44px;
+  }
+
+  .web-stepper {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    padding: 2px 2px 10px;
+    scrollbar-color: var(--blue) transparent;
+    scrollbar-width: thin;
+    scroll-snap-type: inline mandatory;
+  }
+
+  .web-stepper li {
+    flex: 0 0 148px;
+    scroll-snap-align: start;
+  }
+
+  .web-stepper button {
+    height: 100%;
+  }
+
+  .performance-guide {
+    margin-bottom: 12px;
+    padding-block: 6px;
+    font-size: 13px;
+  }
+
+  .chapter-seven-thread {
+    margin: 48px 0 62px;
+    padding: 20px 16px;
+    border-radius: 26px;
+  }
+}
+
+@keyframes localPacketVertical {
+  0% {
+    top: -2px;
+    opacity: 0;
+    transform: rotate(-8deg);
+  }
+  14% {
+    opacity: 1;
+  }
+  84% {
+    top: calc(100% - 30px);
+    opacity: 1;
+    transform: rotate(7deg);
+  }
+  100% {
+    top: calc(100% - 30px);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 620px) {
+  .hero {
+    padding-top: 30px;
+  }
+
+  .hero h1 {
+    font-size: clamp(48px, 14vw, 64px);
+  }
+
+  .hero-intro {
+    padding: 18px;
+  }
+
+  .lab-heading,
+  .play-card-heading,
+  .stacked-mobile {
+    gap: 12px;
+  }
+
+  .button-pair,
+  .dns-controls {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .button-pair .small-button,
+  .dns-controls .small-button {
+    width: 100%;
+  }
+
+  .mission-phase {
+    padding: 15px 12px 12px;
+  }
+
+  .mission-phase-heading {
+    display: block;
+  }
+
+  .mission-phase-heading h3 {
+    font-size: 20px;
+    line-height: 1.2;
+  }
+
+  .mission-phase-heading p {
+    margin-top: 7px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .traffic-key {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin: 12px 0 4px;
+    font-size: 9px;
+  }
+
+  .traffic-key span {
+    display: grid;
+    place-items: center;
+    min-height: 34px;
+    padding: 4px 6px;
+    text-align: center;
+  }
+
+  .mission-route .route-station,
+  .mission-route .dns-branch-station {
+    min-height: 104px;
+    grid-template-columns: 76px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 10px;
+    padding: 8px;
+  }
+
+  .mission-flow .mission-route .speech-bubble {
+    margin-bottom: 2px;
+    font-size: 11px;
+  }
+
+  .mission-route .station-tile {
+    width: 72px;
+    min-height: 72px;
+  }
+
+  .mission-route .station-label {
+    min-width: 0;
+    font-size: 14px;
+    white-space: normal;
+  }
+
+  .mission-flow .route-connector {
+    height: 26px;
+  }
+
+  .mission-flow .route-connector::after {
+    top: 9px;
+  }
+
+  .dns-side-lookup {
+    gap: 4px;
+    margin: 6px 0;
+    padding: 8px 6px 6px;
+  }
+
+  .dns-side-label {
+    font-size: 8px;
+    white-space: normal;
+  }
+
+  .dns-branch-connector {
+    height: 28px;
+  }
+
+  .route-caveat {
+    margin-top: 8px;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .motion-stage {
+    min-height: 290px;
+    padding: 14px 9px;
+  }
+
+  .performance-grid label {
+    padding: 12px;
+  }
+
+  .synthesis-intro {
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 420px) {
+  .site-header,
+  .site-shell,
+  .site-footer {
+    width: calc(100% - 16px);
+  }
+
+  .brand {
+    font-size: 10px;
+  }
+
+  .brand-face {
+    width: 34px;
+    height: 34px;
+  }
+
+  .chapter-progress {
+    padding-inline: 7px;
+  }
+
+  .chapter-progress b {
+    width: 28px;
+    height: 28px;
+  }
+
+  .chapter-section {
+    padding-inline: 12px;
+  }
+
+  .play-card {
+    padding-inline: 11px;
+  }
+
+  .button-pair,
+  .dns-controls {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1180px) {
+  .dns-side-lookup,
+  .mission-route .dns-branch-station {
+    min-width: 0;
+  }
+
+  .dns-side-label {
+    max-width: 100%;
+    white-space: normal;
+  }
+}
+
+/* Screenshot-driven containment repairs. */
+.dns-side-lookup,
+.mission-route .dns-branch-station {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.dns-side-label {
+  max-width: 100%;
+  box-sizing: border-box;
+  line-height: 1.25;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.route-caveat {
+  margin: 12px 0 4px;
+}
+
+.browser-scene > *,
+.web-art > * {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1400px) {
+  .website-concept-layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+    grid-template-areas:
+      "motion"
+      "explanation"
+      "feedback";
+  }
+
+  .website-concept-layout .concept-explanation::after {
+    display: none;
+  }
+
+  .website-concept-layout .motion-stage {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 920px) {
+  .website-concept-layout .browser-scene {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Final mobile teaching-layout corrections. */
+.route-fork,
+.route-join {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .mission-route .route-stage,
+  .mission-route .route-stage:last-child {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+
+  .mission-route .route-station {
+    width: min(100%, 320px);
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    justify-items: center;
+    row-gap: 7px;
+    padding: 8px 12px 12px;
+  }
+
+  .mission-flow .mission-route .speech-bubble {
+    grid-column: 1;
+    grid-row: 1;
+    max-width: min(100%, 220px);
+    margin: 0 0 2px;
+    white-space: normal;
+  }
+
+  .mission-route .station-tile {
+    width: 88px;
+    min-height: 88px;
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .mission-route .station-label {
+    grid-column: 1;
+    grid-row: 3;
+    margin: 2px 0 0;
+    font-size: 13px;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .mission-route .route-stage > .route-connector {
+    width: 4px;
+    height: 42px;
+    grid-column: 1;
+    grid-row: auto;
+    justify-self: center;
+  }
+
+  .mission-flow .route-connector::after {
+    content: "⇅";
+    left: -10px;
+    right: auto;
+    top: 15px;
+  }
+
+  .dns-side-lookup {
+    width: min(50%, 300px);
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    justify-items: stretch;
+    align-items: center;
+    gap: 6px 0;
+    justify-self: start;
+    margin: 8px 0 12px 50%;
+    padding: 8px 7px 8px 0;
+    border-radius: 14px;
+  }
+
+  .dns-side-label {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    margin-left: 6px;
+    border-radius: 11px;
+    font-size: 8px;
+    line-height: 1.25;
+    white-space: normal;
+  }
+
+  .dns-branch-connector {
+    width: 100%;
+    height: 4px;
+    grid-column: 1;
+    grid-row: 2;
+    background-image: repeating-linear-gradient(90deg, var(--ink) 0 5px, transparent 5px 10px);
+    background-repeat: repeat-x;
+    background-position: center;
+  }
+
+  .dns-branch-connector::after {
+    content: "⇄";
+    position: absolute;
+    left: 6px;
+    top: -22px;
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 900;
+  }
+
+  .dns-side-lookup .mission-packet {
+    display: none;
+  }
+
+  .mission-route .dns-branch-station {
+    width: 100%;
+    min-height: 126px;
+    grid-column: 2;
+    grid-row: 2;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    padding: 7px 5px 9px;
+  }
+
+  .mission-route .dns-branch-station .station-tile {
+    width: 62px;
+    min-height: 62px;
+  }
+
+  .mission-route .dns-branch-station .station-label {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 720px) {
+  .protocol-lane {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    padding: 13px;
+    opacity: 0.72;
+  }
+
+  .protocol-lane.recommended {
+    opacity: 1;
+  }
+
+  .protocol-lane > strong {
+    font-size: 21px;
+  }
+
+  .protocol-lane small {
+    font-size: 11px;
+    line-height: 1.35;
+  }
+
+  .protocol-track {
+    width: 100%;
+    height: 98px;
+    margin-top: 12px;
+    overflow: visible;
+  }
+
+  .chapter-section.is-active .mini-packet {
+    animation-name: protocolFlowPhone;
+    animation-duration: 4.8s;
+  }
+
+  .chapter-section.is-active .mini-packet.p-2 { animation-delay: 600ms; }
+  .chapter-section.is-active .mini-packet.p-3 { animation-delay: 1.2s; }
+  .chapter-section.is-active .mini-packet.p-4 { animation-delay: 1.8s; }
+
+  .chapter-section.is-active .tcp-lane .p-3 {
+    animation-name: tcpRetryPhone;
+    animation-duration: 5.4s;
+  }
+
+  .chapter-section.is-active .udp-lane .p-3 {
+    animation-name: udpDrop;
+    animation-duration: 4.8s;
+  }
+
+  .chapter-section.is-active .ack-one {
+    animation-name: ackReturnPhone;
+  }
+
+  .ack-two {
+    display: none;
+  }
+
+  .ack-one {
+    right: 4px;
+    top: 64px;
+  }
+
+  .retry-flag {
+    left: 4px;
+    top: 38px;
+  }
+
+  .keep-going {
+    width: auto;
+    max-width: calc(100% - 8px);
+    left: auto;
+    right: 4px;
+    top: 58px;
+    white-space: nowrap;
+  }
+
+  .web-stepper {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    overflow: visible;
+    padding: 0;
+    scroll-snap-type: none;
+  }
+
+  .web-stepper li {
+    min-width: 0;
+    flex: initial;
+  }
+
+  .web-stepper button {
+    min-height: 68px;
+    height: 100%;
+    padding: 8px;
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  .browser-scene {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .web-step-detail {
+    order: -1;
+    padding: 16px;
+  }
+
+  .web-step-detail h3 {
+    margin-block: 6px;
+    font-size: 20px;
+  }
+
+  .web-step-detail p {
+    font-size: 13px;
+  }
+
+  .step-controls {
+    margin-top: 14px;
+  }
+
+  .browser-page {
+    min-height: 0;
+    padding: 52px 12px 12px;
+  }
+
+  .web-art,
+  .web-dns-art {
+    min-height: 0;
+    gap: 8px;
+  }
+
+  .web-ticket,
+  .web-ip-ticket,
+  .handshake-node,
+  .request-card,
+  .request-server,
+  .file-source,
+  .file-browser {
+    min-height: 70px;
+  }
+
+  .web-dns-book {
+    min-height: 82px;
+  }
+
+  .website-concept-layout .web-ticket,
+  .website-concept-layout .web-ip-ticket,
+  .website-concept-layout .web-dns-book,
+  .website-concept-layout .handshake-node,
+  .website-concept-layout .request-card,
+  .website-concept-layout .request-server,
+  .website-concept-layout .file-source,
+  .website-concept-layout .file-browser {
+    padding: 7px;
+    font-size: 10px;
+  }
+
+  .website-concept-layout .web-dns-book,
+  .website-concept-layout .request-card {
+    font-size: 16px;
+  }
+
+  .website-concept-layout .web-dns-art,
+  .website-concept-layout .web-handshake-art,
+  .website-concept-layout .web-request-art,
+  .website-concept-layout .web-files-art {
+    grid-template-columns: minmax(70px, 1fr) minmax(48px, 0.58fr) minmax(70px, 1fr);
+    align-items: center;
+    gap: 6px;
+  }
+
+  .website-concept-layout .web-dns-art .web-ticket {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .website-concept-layout .web-dns-art .web-art-path {
+    width: 100%;
+    height: 5px;
+    grid-column: 1 / 4;
+    grid-row: 1;
+    background-image: repeating-linear-gradient(90deg, var(--ink) 0 5px, transparent 5px 10px);
+    background-repeat: repeat-x;
+  }
+
+  .website-concept-layout .web-dns-art .web-dns-book {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .website-concept-layout .web-dns-art .web-ip-ticket {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .website-concept-layout .web-moving-packet,
+  .website-concept-layout .request-packet {
+    left: 0;
+    top: -15px;
+    animation-name: pathTravelLoop;
+  }
+
+  .website-concept-layout .request-track,
+  .website-concept-layout .file-stream {
+    width: 100%;
+    height: 5px;
+    min-height: 5px;
+    justify-self: stretch;
+    background-image: repeating-linear-gradient(90deg, var(--ink) 0 5px, transparent 5px 10px);
+    background-repeat: repeat-x;
+  }
+
+  .website-concept-layout .handshake-line {
+    width: 100%;
+    height: auto;
+    min-height: 84px;
+    justify-self: stretch;
+    background:
+      repeating-linear-gradient(90deg, var(--ink) 0 5px, transparent 5px 10px) center 38% / auto 4px repeat-x,
+      repeating-linear-gradient(90deg, var(--blue) 0 5px, transparent 5px 10px) center 68% / auto 4px repeat-x;
+  }
+
+  .web-art-path,
+  .request-track,
+  .handshake-line,
+  .file-stream {
+    height: 50px;
+  }
+}
+
+@media (max-width: 620px) {
+  .mission-route .route-stage,
+  .mission-route .route-stage:last-child {
+    width: 100%;
+    grid-template-columns: minmax(100px, 0.86fr) minmax(122px, 1.14fr);
+    column-gap: 8px;
+    justify-items: center;
+  }
+
+  .mission-route .route-stage > .route-station {
+    width: 100%;
+    min-height: 132px;
+    grid-column: 1;
+    grid-row: 1;
+    padding-inline: 2px;
+  }
+
+  .mission-route .route-stage > .route-connector {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .mission-route .station-tile {
+    width: 76px;
+    min-height: 76px;
+  }
+
+  .mission-route .station-label {
+    font-size: 12px;
+  }
+
+  .dns-side-lookup {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+    justify-self: stretch;
+    margin: 0;
+    padding: 7px;
+    position: relative;
+  }
+
+  .dns-side-lookup::before {
+    content: "";
+    width: calc(38% + 10px);
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    border-top: 4px dotted var(--ink);
+  }
+
+  .dns-side-lookup::after {
+    content: "⇄";
+    position: absolute;
+    right: calc(119% - 8px);
+    top: calc(50% - 20px);
+    font-family: var(--display);
+    font-size: 17px;
+    font-weight: 900;
+  }
+
+  .dns-side-label {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0 0 6px;
+  }
+
+  .dns-branch-connector {
+    display: none;
+  }
+
+  .mission-route .dns-branch-station {
+    min-height: 118px;
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .mission-route .dns-branch-station .station-tile {
+    width: 58px;
+    min-height: 58px;
+  }
+
+  .route-map {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 26px;
+    width: 100%;
+    max-width: 360px;
+    margin-inline: auto;
+  }
+
+  .route-map .map-endpoint {
+    width: min(76%, 190px);
+    min-height: 72px;
+    justify-self: center;
+  }
+
+  .path-stack {
+    width: 100%;
+    max-width: 320px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto 32px 190px 32px;
+    gap: 0 18px;
+    margin-inline: auto;
+  }
+
+  .route-junction {
+    min-height: 70px;
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .route-junction::before,
+  .end-point::before {
+    width: 34px;
+    height: 12px;
+    left: 50%;
+    right: auto;
+    top: -30px;
+    background: var(--ink);
+    clip-path: polygon(0 38%, 82% 38%, 82% 0, 100% 50%, 82% 100%, 82% 62%, 0 62%);
+    transform: rotate(90deg);
+    transform-origin: left center;
+  }
+
+  .end-point {
+    position: relative;
+  }
+
+  .end-point::before {
+    content: "";
+    position: absolute;
+  }
+
+  .route-fork,
+  .route-join {
+    width: 100%;
+    height: 32px;
+    display: block;
+    grid-column: 1 / -1;
+    position: relative;
+  }
+
+  .route-fork {
+    grid-row: 2;
+    background: linear-gradient(var(--ink), var(--ink)) center top / 3px 11px no-repeat;
+  }
+
+  .route-join {
+    grid-row: 4;
+    background: linear-gradient(var(--ink), var(--ink)) center bottom / 3px 11px no-repeat;
+  }
+
+  .route-fork::before,
+  .route-fork::after,
+  .route-join::before,
+  .route-join::after {
+    content: "";
+    width: calc(25% + 5px);
+    height: 3px;
+    position: absolute;
+    background: var(--ink);
+  }
+
+  .route-fork::before {
+    right: 50%;
+    top: 10px;
+    transform: rotate(-15deg);
+    transform-origin: right center;
+  }
+
+  .route-fork::after {
+    left: 50%;
+    top: 10px;
+    transform: rotate(15deg);
+    transform-origin: left center;
+  }
+
+  .route-join::before {
+    right: 50%;
+    bottom: 10px;
+    transform: rotate(15deg);
+    transform-origin: right center;
+  }
+
+  .route-join::after {
+    left: 50%;
+    bottom: 10px;
+    transform: rotate(-15deg);
+    transform-origin: left center;
+  }
+
+  .direct-path,
+  .detour-path {
+    min-height: 190px;
+    grid-row: 3;
+  }
+
+  .direct-path {
+    grid-column: 1;
+  }
+
+  .detour-path {
+    grid-column: 2;
+  }
+
+  .route-map .map-path {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 36px 4px 14px;
+    background-image: repeating-linear-gradient(180deg, var(--route-color) 0 6px, transparent 6px 14px);
+    background-position: center;
+    background-repeat: repeat-y;
+    background-size: 4px auto;
+  }
+
+  .map-path > .path-name {
+    max-width: calc(100% - 4px);
+    top: 2px;
+    padding-inline: 6px;
+    font-size: 8px;
+    line-height: 1.2;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .path-stack .map-path::before,
+  .path-stack .map-path::after {
+    display: none;
+  }
+
+  .map-packet {
+    left: calc(50% - 17px);
+    top: 12px;
+  }
+
+  .chapter-section.is-active .route-map.direct .direct-path .map-packet,
+  .chapter-section.is-active .route-map.detour .detour-path .map-packet {
+    animation-name: routeTracePhone;
+  }
+
+  .chapter-section.is-active .route-map .map-echo {
+    display: none !important;
+  }
+}
+
+@keyframes protocolFlowPhone {
+  0% { left: 0; opacity: 0; transform: rotate(-7deg); }
+  10% { opacity: 1; }
+  70% { left: calc(100% - 38px); opacity: 1; transform: rotate(5deg); }
+  78%, 100% { left: calc(100% - 38px); opacity: 0; }
+}
+
+@keyframes tcpRetryPhone {
+  0% { left: 0; opacity: 0; transform: translateY(0); }
+  9% { opacity: 1; }
+  38% { left: 48%; opacity: 1; transform: translateY(0) rotate(5deg); }
+  46% { left: 48%; opacity: 0.3; transform: translateY(14px) rotate(-8deg); }
+  54% { left: 0; opacity: 1; transform: translateY(0); }
+  78% { left: calc(100% - 38px); opacity: 1; }
+  84%, 100% { left: calc(100% - 38px); opacity: 0; }
+}
+
+@keyframes ackReturnPhone {
+  0%, 40%, 100% { opacity: 0; transform: translateX(0); }
+  48% { opacity: 1; }
+  78% { opacity: 1; transform: translateX(-28px); }
+  86% { opacity: 0; transform: translateX(-36px); }
+}
+
+@keyframes routeTracePhone {
+  0% { left: calc(50% - 17px); top: 12px; opacity: 0; transform: rotate(-6deg); }
+  10% { opacity: 1; }
+  78% { left: calc(50% - 17px); top: calc(100% - 46px); opacity: 1; transform: rotate(5deg); }
+  90%, 100% { left: calc(50% - 17px); top: calc(100% - 46px); opacity: 0; transform: rotate(5deg); }
 }

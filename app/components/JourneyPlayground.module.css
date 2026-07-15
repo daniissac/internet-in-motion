@@ -55,16 +55,15 @@
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1.45fr);
-  gap: clamp(22px, 4vw, 46px);
+  grid-template-columns: minmax(360px, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(22px, 3vw, 36px);
   align-items: start;
 }
 
 .controls {
   display: grid;
   gap: 16px;
-  position: sticky;
-  top: 94px;
+  position: static;
 }
 
 .controls fieldset {
@@ -200,21 +199,26 @@
   transition: transform 150ms ease, box-shadow 150ms ease;
 }
 
-.runButton:not(:disabled):hover {
+.runButton:not(:disabled):not([aria-disabled="true"]):hover {
   transform: translate(2px, 2px);
   box-shadow: 3px 3px 0 var(--ink, #10244f);
 }
 
-.runButton:disabled {
+.runButton:disabled,
+.runButton[aria-disabled="true"] {
   cursor: wait;
 }
 
 .experience {
   min-width: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
 }
 
 .routeStage {
   min-height: 250px;
+  scroll-margin-block: 96px 24px;
   display: grid;
   align-content: center;
   position: relative;
@@ -381,6 +385,9 @@
 }
 
 .results {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   opacity: 0.62;
   transition: opacity 220ms ease;
 }
@@ -455,6 +462,10 @@
   font-size: 18px;
 }
 
+.eventLog {
+  max-width: 760px;
+}
+
 .eventLog ol {
   list-style: none;
   display: grid;
@@ -513,13 +524,14 @@
 }
 
 .emptyResult {
+  flex: 1;
   min-height: 170px;
   display: grid;
-  place-content: center;
+  place-content: start center;
   gap: 6px;
   border: 3px dashed rgb(16 36 79 / 34%);
   border-radius: 20px;
-  padding: 28px;
+  padding: 44px 28px 28px;
   text-align: center;
 }
 
@@ -552,7 +564,7 @@
   100% { left: calc(100% - 50px); transform: translateY(0) rotate(3deg); }
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1180px) {
   .layout {
     grid-template-columns: 1fr;
   }
@@ -671,5 +683,125 @@
   .movingPacket {
     left: calc(100% - 50px);
     animation: none;
+  }
+}
+
+/* Content support layered onto the stable playground layout. */
+.playground,
+.layout,
+.controls,
+.experience,
+.results,
+.resultSummary,
+.breakdown div {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.guidance {
+  max-width: 760px;
+  margin: 9px 0 0;
+  padding-left: 11px;
+  border-left: 3px solid var(--blue, #1647d8);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.unitHelp {
+  color: rgb(16 36 79 / 72%);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.logNote {
+  margin: -5px 0 12px;
+  color: rgb(16 36 79 / 72%);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.experimentGuide {
+  margin: 24px 0 0;
+  padding-top: 17px;
+  border-top: 2px dashed rgb(16 36 79 / 28%);
+}
+
+.experimentGuide h3 {
+  margin: 0 0 11px;
+  font-family: var(--display, system-ui, sans-serif);
+  font-size: 17px;
+}
+
+.experimentGuide ol {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px 18px;
+  margin: 0;
+  padding-left: 22px;
+}
+
+.experimentGuide li {
+  min-width: 0;
+  padding-left: 2px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.transportChoices input {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+}
+
+.sliders input {
+  min-height: 36px;
+}
+
+.assumptionNote {
+  font-size: 13px;
+}
+
+@media (max-width: 1180px) {
+  .experimentGuide ol {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .guidance {
+    font-size: 14px;
+  }
+
+  .experimentGuide ol {
+    grid-template-columns: 1fr;
+  }
+
+  .switchRow,
+  .transportChoices label {
+    min-height: 52px;
+  }
+
+  .switchRow input {
+    width: 26px;
+    height: 26px;
+  }
+
+  .runButton {
+    min-height: 50px;
+  }
+
+  .liveStatus,
+  .resultSummary,
+  .breakdown,
+  .eventLog,
+  .emptyResult {
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 540px) {
+  .transportChoices {
+    grid-template-columns: 1fr;
   }
 }

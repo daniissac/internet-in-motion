@@ -22,6 +22,7 @@ export type PredictionCheckProps = {
   correctFeedback?: string;
   incorrectFeedback?: string;
   resetLabel?: string;
+  nextAction?: string;
   className?: string;
 };
 
@@ -34,6 +35,7 @@ export default function PredictionCheck({
   correctFeedback = "Exactly right.",
   incorrectFeedback = "Good prediction. Let’s trace what actually happens.",
   resetLabel = "Try again",
+  nextAction,
   className,
 }: PredictionCheckProps) {
   const titleId = useId();
@@ -105,13 +107,14 @@ export default function PredictionCheck({
           <div>
             <strong>{isCorrect ? correctFeedback : incorrectFeedback}</strong>
             <p>{explanation}</p>
+            {nextAction ? <p className={styles.nextAction}>{nextAction}</p> : null}
           </div>
           <button className={styles.reset} type="button" onClick={resetPrediction}>
             {resetLabel} ↻
           </button>
         </div>
       ) : (
-        <p className={styles.hint}>Choose one answer before running the visual.</p>
+        <p className={styles.hint}>Choose an answer, then compare it with the visual below.</p>
       )}
     </section>
   );

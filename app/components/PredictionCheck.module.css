@@ -157,6 +157,13 @@
   line-height: 1.45;
 }
 
+.feedback .nextAction {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed color-mix(in srgb, var(--ink, #10244f) 38%, transparent);
+  font-weight: 850;
+}
+
 .reset {
   min-height: 40px;
   flex: 0 0 auto;
@@ -185,6 +192,22 @@
     box-shadow: 4px 4px 0 var(--ink, #10244f);
   }
 
+  .heading h3 {
+    font-size: 21px;
+    line-height: 1.22;
+  }
+
+  .choice {
+    min-height: 56px;
+    padding: 12px;
+    font-size: 15px;
+  }
+
+  .hint,
+  .feedback p {
+    font-size: 14px;
+  }
+
   .feedback {
     align-items: stretch;
     flex-direction: column;
@@ -192,6 +215,8 @@
 
   .reset {
     width: 100%;
+    min-height: 46px;
+    font-size: 13px;
   }
 }
 
@@ -199,5 +224,56 @@
   .choice,
   .reset {
     transition: none;
+  }
+}
+
+@media (min-width: 721px) {
+  .check {
+    margin-top: 18px;
+    padding: 18px 20px;
+  }
+
+  .heading {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+  }
+
+  .choices {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  .choice {
+    min-height: 70px;
+    align-content: center;
+  }
+}
+
+@media (max-width: 560px) {
+  .check {
+    margin-top: 18px;
+    padding: 15px;
+  }
+
+  .choices {
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .choice {
+    min-height: 48px;
+    padding: 9px 10px;
+    font-size: 14px;
+  }
+
+  .feedback {
+    padding: 12px;
+  }
+
+  .reset {
+    width: auto;
+    align-self: flex-start;
+    min-height: 44px;
   }
 }
