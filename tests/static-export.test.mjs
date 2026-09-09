@@ -31,6 +31,10 @@ test("contains the complete eight-chapter experience", async () => {
   assert.match(html, /Router A[\s\S]+Primary[\s\S]+Router B[\s\S]+Alternate/);
   assert.match(css, /@keyframes route-flow/);
   assert.match(script, /packet uses Router B/);
+  assert.match(html, /id="transport-output"/);
+  assert.match(css, /@keyframes transport-travel/);
+  assert.match(script, /QUIC includes TLS in its transport handshake/);
+  assert.match(script, /restartAnimation\(output, "playing"\)/);
   assert.match(script, /calculateJourney/);
   assert.doesNotMatch(html + css + script, /react|next\/|vite|node_modules/i);
 

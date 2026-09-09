@@ -209,10 +209,30 @@
         <div class="demo">
           <fieldset class="transport-cards" data-choice="transport">
             <legend>Choose a secure web transport</legend>
-            <label><input type="radio" name="transport-demo" value="TCP + TLS: ordered delivery with a separate connection setup." checked><b>TCP + TLS</b><span>HTTP/1.1 or HTTP/2</span></label>
-            <label><input type="radio" name="transport-demo" value="QUIC: encryption and reliable streams over UDP with a shorter new-connection model."><b>QUIC + TLS</b><span>HTTP/3</span></label>
+            <label><input type="radio" name="transport-demo" value="tcp" checked><b>TCP + TLS</b><span>HTTP/1.1 or HTTP/2</span></label>
+            <label><input type="radio" name="transport-demo" value="quic"><b>QUIC + TLS</b><span>HTTP/3</span></label>
           </fieldset>
-          <p class="status" id="transport-status" aria-live="polite">TCP + TLS: ordered delivery with a separate connection setup.</p>
+          <div class="transport-output playing" id="transport-output" data-mode="tcp" aria-live="polite">
+            <div class="transport-result-head">
+              <span class="eyebrow">Result</span>
+              <strong id="transport-title">TCP and TLS set up in sequence</strong>
+              <span id="transport-summary">Application data waits while the transport and encryption are prepared.</span>
+            </div>
+            <div class="transport-journey" aria-hidden="true">
+              <span class="transport-endpoint">Browser</span>
+              <div class="transport-lanes" id="transport-lanes">
+                <div class="transport-lane"><span>1 · TCP connect</span><i style="--delay: 0s">SYN</i></div>
+                <div class="transport-lane"><span>2 · TLS secure</span><i style="--delay: .8s">TLS</i></div>
+                <div class="transport-lane"><span>3 · Request</span><i style="--delay: 1.6s">GET</i></div>
+              </div>
+              <span class="transport-endpoint">Server</span>
+            </div>
+            <ol class="transport-events" id="transport-events">
+              <li><b>1</b><span><strong>Connect</strong>TCP establishes the connection.</span></li>
+              <li><b>2</b><span><strong>Secure</strong>TLS negotiates encryption.</span></li>
+              <li><b>3</b><span><strong>Request</strong>The browser can now send HTTP data.</span></li>
+            </ol>
+          </div>
         </div>
       </div>
     </section>

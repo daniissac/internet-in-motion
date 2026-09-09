@@ -65,8 +65,54 @@ document.querySelector('[data-choice="connection"]').addEventListener("change", 
   byId("connection-status").textContent = `${event.target.value} carries the data to the gateway.`;
 });
 
+const transportStories = {
+  tcp: {
+    title: "TCP and TLS set up in sequence",
+    summary: "Application data waits while the transport and encryption are prepared.",
+    lanes: [
+      ["1 · TCP connect", "SYN", "0s"],
+      ["2 · TLS secure", "TLS", ".8s"],
+      ["3 · Request", "GET", "1.6s"],
+    ],
+    events: [
+      ["Connect", "TCP establishes the connection."],
+      ["Secure", "TLS negotiates encryption."],
+      ["Request", "The browser can now send HTTP data."],
+    ],
+  },
+  quic: {
+    title: "QUIC prepares secure transport together",
+    summary: "HTTP/3 can then carry independent streams without one lost stream holding up the others.",
+    lanes: [
+      ["1 · Secure connect", "QUIC", "0s"],
+      ["2 · HTML stream", "HTML", ".85s"],
+      ["2 · Image stream", "IMG", "1.05s"],
+    ],
+    events: [
+      ["Connect + secure", "QUIC includes TLS in its transport handshake."],
+      ["Send streams", "HTTP/3 resources use independent QUIC streams."],
+      ["Isolate loss", "A delayed image stream need not stop the HTML stream."],
+    ],
+  },
+};
+
+function showTransport(mode) {
+  const story = transportStories[mode];
+  const output = byId("transport-output");
+  output.dataset.mode = mode;
+  byId("transport-title").textContent = story.title;
+  byId("transport-summary").textContent = story.summary;
+  byId("transport-lanes").innerHTML = story.lanes
+    .map(([label, token, delay]) => `<div class="transport-lane"><span>${label}</span><i style="--delay: ${delay}">${token}</i></div>`)
+    .join("");
+  byId("transport-events").innerHTML = story.events
+    .map(([title, copy], index) => `<li><b>${index + 1}</b><span><strong>${title}</strong>${copy}</span></li>`)
+    .join("");
+  restartAnimation(output, "playing");
+}
+
 document.querySelector('[data-choice="transport"]').addEventListener("change", (event) => {
-  byId("transport-status").textContent = event.target.value;
+  showTransport(event.target.value);
 });
 
 byId("path-failure").addEventListener("change", (event) => {
