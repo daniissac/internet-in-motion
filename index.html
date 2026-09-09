@@ -177,11 +177,20 @@
           <p class="takeaway"><b>Takeaway</b>No router needs to know the entire physical journey.</p>
         </div>
         <div class="demo">
-          <div class="route-choice" id="route-choice" aria-label="Primary and alternate routes">
-            <span>Router A</span><i class="primary"></i><span>Router B</span><i class="alternate"></i><span>Server</span>
+          <div class="route-choice" id="route-choice" role="img" aria-label="The device has a primary route through Router A and an alternate route through Router B to the server">
+            <svg viewBox="0 0 420 260" aria-hidden="true">
+              <path class="route-base primary-path" d="M86 130 L169 48 L334 130"></path>
+              <path class="route-base alternate-path" d="M86 130 L169 212 L334 130"></path>
+              <path class="route-flow primary-flow" pathLength="100" d="M86 130 L169 48 L334 130"></path>
+              <path class="route-flow alternate-flow" pathLength="100" d="M86 130 L169 212 L334 130"></path>
+              <g class="route-node device-node"><rect x="4" y="105" width="82" height="50" rx="9"></rect><text x="45" y="135">Device</text></g>
+              <g class="route-node primary-node"><rect x="169" y="20" width="82" height="56" rx="9"></rect><text x="210" y="44">Router A</text><text class="node-role" x="210" y="61">Primary</text></g>
+              <g class="route-node alternate-node"><rect x="169" y="184" width="82" height="56" rx="9"></rect><text x="210" y="208">Router B</text><text class="node-role" x="210" y="225">Alternate</text></g>
+              <g class="route-node server-node"><rect x="334" y="105" width="82" height="50" rx="9"></rect><text x="375" y="135">Server</text></g>
+            </svg>
           </div>
-          <label class="switch"><input id="path-failure" type="checkbox"> Block the primary path</label>
-          <p class="status" id="route-status" aria-live="polite">The primary path is available.</p>
+          <label class="switch"><input id="path-failure" type="checkbox"> Fail the primary route</label>
+          <p class="status" id="route-status" aria-live="polite">The packet is using the primary route through Router A.</p>
         </div>
       </div>
     </section>

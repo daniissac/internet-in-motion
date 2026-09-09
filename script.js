@@ -72,8 +72,8 @@ document.querySelector('[data-choice="transport"]').addEventListener("change", (
 byId("path-failure").addEventListener("change", (event) => {
   byId("route-choice").classList.toggle("failed", event.target.checked);
   byId("route-status").textContent = event.target.checked
-    ? "The primary path failed. After routing converges, traffic uses the available alternate path."
-    : "The primary path is available.";
+    ? "The route through Router A failed. After convergence, the packet uses Router B."
+    : "The packet is using the primary route through Router A.";
 });
 
 const pageSteps = [
