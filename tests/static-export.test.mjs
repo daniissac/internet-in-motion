@@ -22,21 +22,28 @@ test("contains the complete eight-chapter experience", async () => {
   assert.match(css, /@media \(max-width: 760px\)/);
   assert.match(css, /prefers-reduced-motion/);
   assert.match(css, /\.mini-route \{ position: relative;/);
-  assert.match(css, /@keyframes hello/);
   assert.match(html, /class="local-packet">data/);
-  assert.match(css, /@keyframes local-travel/);
-  assert.match(css, /@keyframes packet-drop/);
-  assert.match(css, /@keyframes packet-return/);
-  assert.match(script, /requests piece 3 again/);
+  assert.match(script, /function sendHello/);
+  assert.match(script, /function sendLocal/);
+  assert.match(html, /class="packet-wire"/);
+  assert.match(script, /runPacketDemo/);
+  assert.match(html, /class="dns-wire"/);
+  assert.match(script, /runDnsLookup/);
   assert.match(html, /Router A[\s\S]+Primary[\s\S]+Router B[\s\S]+Alternate/);
   assert.match(css, /@keyframes route-flow/);
   assert.match(script, /packet uses Router B/);
   assert.match(html, /id="transport-output"/);
-  assert.match(css, /@keyframes transport-travel/);
   assert.match(script, /QUIC includes TLS in its transport handshake/);
-  assert.match(script, /restartAnimation\(output, "playing"\)/);
+  assert.match(script, /transport-result-title/);
+  assert.match(script, /function playAcross/);
+  assert.match(script, /activeAnimations/);
+  assert.match(script, /\.animate\(keyframes/);
+  assert.doesNotMatch(css, /animation:[^;]*infinite/);
   assert.match(script, /calculateJourney/);
   assert.doesNotMatch(html + css + script, /react|next\/|vite|node_modules/i);
+
+  const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
+  assert.equal(new Set(ids).size, ids.length, "every HTML id must be unique");
 
   for (const id of ["network", "local", "packets", "dns", "routing", "transport", "website", "performance"]) {
     assert.match(html, new RegExp(`id="${id}"`));

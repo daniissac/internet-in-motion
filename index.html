@@ -63,7 +63,10 @@
           <li><i>03</i><b>Routers</b><span>Choose each next hop</span></li>
           <li><i>04</i><b>Server</b><span>Returns the page</span></li>
         </ol>
-        <div class="route-line" aria-hidden="true"><span class="traveller">GET</span></div>
+        <div class="route-line" aria-hidden="true">
+          <span class="traveller request-token">GET →</span>
+          <span class="traveller response-token">← PAGE</span>
+        </div>
         <p class="route-note"><strong>Teaching model:</strong> cached answers can skip steps, routes can differ in each direction, and real pages make many requests.</p>
       </div>
     </section>
@@ -119,8 +122,9 @@
             <label><input type="radio" name="connection" value="Wi-Fi radio waves" checked> Wi-Fi</label>
             <label><input type="radio" name="connection" value="An Ethernet cable"> Ethernet</label>
           </fieldset>
-          <div class="mini-route three local-route running" aria-hidden="true"><b>Laptop</b><i></i><span class="local-packet">data</span><b>Gateway</b><i></i><b>Internet</b></div>
-          <p class="status" id="connection-status" aria-live="polite">Wi-Fi radio waves carry the data to the gateway.</p>
+          <div class="mini-route three local-route" aria-hidden="true"><b>Laptop</b><i></i><span class="local-packet">data</span><b>Gateway</b><i></i><b>Internet</b></div>
+          <button class="secondary-button motion-action" type="button" data-action="send-local">Send data →</button>
+          <p class="status" id="connection-status" aria-live="polite">Wi-Fi selected. Send data to see it cross the local link and gateway.</p>
         </div>
       </div>
     </section>
@@ -138,6 +142,13 @@
         </div>
         <div class="demo packet-demo">
           <div class="demo-head"><span>Reliable delivery</span><button class="secondary-button" type="button" data-action="drop-packet" aria-pressed="false">Drop #3</button></div>
+          <div class="packet-path" aria-hidden="true">
+            <span class="motion-endpoint">Sender</span>
+            <div class="packet-wire">
+              <i data-flight="1">1</i><i data-flight="2">2</i><i data-flight="3">3</i><i data-flight="4">4</i><i data-flight="5">5</i><i data-flight="6">6</i><i data-flight="7">7</i>
+            </div>
+            <span class="motion-endpoint">Receiver</span>
+          </div>
           <div class="packets" aria-label="The word NETWORK split into seven teaching packets">
             <span><i>1</i>N</span><span><i>2</i>E</span><span data-packet="3"><i>3</i>T</span><span><i>4</i>W</span><span><i>5</i>O</span><span><i>6</i>R</span><span><i>7</i>K</span>
           </div>
@@ -159,6 +170,11 @@
         </div>
         <div class="demo dns-demo">
           <div class="lookup-row"><code>google.com</code><span>→</span><output id="dns-answer">?</output></div>
+          <div class="dns-motion" aria-hidden="true">
+            <span class="motion-endpoint">Browser</span>
+            <div class="dns-wire"><i class="dns-query">QUERY →</i><i class="dns-response">← ANSWER</i></div>
+            <span class="motion-endpoint">Resolver</span>
+          </div>
           <button class="secondary-button" type="button" data-action="dns-lookup">Reveal example address</button>
           <p class="status" id="dns-status" aria-live="polite">Ask the resolver for an address.</p>
         </div>
@@ -212,10 +228,10 @@
             <label><input type="radio" name="transport-demo" value="tcp" checked><b>TCP + TLS</b><span>HTTP/1.1 or HTTP/2</span></label>
             <label><input type="radio" name="transport-demo" value="quic"><b>QUIC + TLS</b><span>HTTP/3</span></label>
           </fieldset>
-          <div class="transport-output playing" id="transport-output" data-mode="tcp" aria-live="polite">
+          <div class="transport-output" id="transport-output" data-mode="tcp" aria-live="polite">
             <div class="transport-result-head">
               <span class="eyebrow">Result</span>
-              <strong id="transport-title">TCP and TLS set up in sequence</strong>
+              <strong id="transport-result-title">TCP and TLS set up in sequence</strong>
               <span id="transport-summary">Application data waits while the transport and encryption are prepared.</span>
             </div>
             <div class="transport-journey" aria-hidden="true">

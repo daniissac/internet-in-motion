@@ -2,9 +2,12 @@
 
 const byId = (id) => document.getElementById(id);
 const motionToggle = byId("motion-toggle");
+const activeAnimations = new Set();
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 motionToggle.addEventListener("click", () => {
   const paused = document.body.classList.toggle("motion-paused");
+  activeAnimations.forEach((animation) => paused ? animation.pause() : animation.play());
   motionToggle.setAttribute("aria-pressed", String(paused));
   motionToggle.textContent = paused ? "Resume motion" : "Pause motion";
 });
@@ -14,41 +17,166 @@ function restartAnimation(element, className) {
   requestAnimationFrame(() => requestAnimationFrame(() => element.classList.add(className)));
 }
 
+function play(element, keyframes, options) {
+  element.getAnimations().forEach((animation) => animation.cancel());
+  const animation = element.animate(keyframes, {
+    duration: reducedMotion.matches ? 1 : 900,
+    easing: "ease-in-out",
+    fill: "forwards",
+    ...options,
+  });
+  activeAnimations.add(animation);
+  if (document.body.classList.contains("motion-paused")) animation.pause();
+  animation.finished.catch(() => {}).finally(() => activeAnimations.delete(animation));
+  return animation;
+}
+
+function horizontalFrames(element, container, start, end, reverse = false) {
+  const containerRect = container.getBoundingClientRect();
+  const startRect = start.getBoundingClientRect();
+  const endRect = end.getBoundingClientRect();
+  const width = element.getBoundingClientRect().width;
+  const from = startRect.left + startRect.width / 2 - containerRect.left - width / 2;
+  const to = endRect.left + endRect.width / 2 - containerRect.left - width / 2;
+  const a = reverse ? to : from;
+  const b = reverse ? from : to;
+  return [
+    { opacity: 0, transform: `translate3d(${a}px, -50%, 0)` },
+    { opacity: 1, offset: .12, transform: `translate3d(${a}px, -50%, 0)` },
+    { opacity: 1, offset: .86, transform: `translate3d(${b}px, -50%, 0)` },
+    { opacity: 0, transform: `translate3d(${b}px, -50%, 0)` },
+  ];
+}
+
+function playOverview() {
+  const track = document.querySelector(".route-line");
+  const request = track.querySelector(".request-token");
+  const response = track.querySelector(".response-token");
+  const distance = Math.max(0, track.clientWidth - request.offsetWidth / 2);
+  play(request, [
+    { opacity: 0, transform: "translate3d(-50%, -50%, 0)" },
+    { opacity: 1, offset: .12 },
+    { opacity: 1, offset: .88, transform: `translate3d(${distance}px, -50%, 0)` },
+    { opacity: 0, transform: `translate3d(${distance}px, -50%, 0)` },
+  ], { duration: reducedMotion.matches ? 1 : 1500 });
+  play(response, [
+    { opacity: 0, transform: `translate3d(${distance}px, -50%, 0)` },
+    { opacity: 1, offset: .12 },
+    { opacity: 1, offset: .88, transform: "translate3d(-50%, -50%, 0)" },
+    { opacity: 0, transform: "translate3d(-50%, -50%, 0)" },
+  ], { duration: reducedMotion.matches ? 1 : 1500, delay: reducedMotion.matches ? 0 : 1650 });
+}
+
+function sendHello() {
+  const route = document.querySelector(".hello-demo .mini-route");
+  const nodes = route.querySelectorAll("b");
+  const message = route.querySelector(".message");
+  byId("hello-status").textContent = "Sending hello from the phone to the laptop…";
+  const animation = play(message, horizontalFrames(message, route, nodes[0], nodes[1]), { duration: reducedMotion.matches ? 1 : 1200 });
+  animation.finished.then(() => {
+    byId("hello-status").textContent = "Hello delivered. The connection carried data from sender to receiver.";
+  }).catch(() => {});
+}
+
+function sendLocal() {
+  const route = document.querySelector(".local-route");
+  const nodes = route.querySelectorAll("b");
+  const packet = route.querySelector(".local-packet");
+  const containerRect = route.getBoundingClientRect();
+  const width = packet.getBoundingClientRect().width;
+  const positions = [...nodes].map((node) => {
+    const rect = node.getBoundingClientRect();
+    return rect.left + rect.width / 2 - containerRect.left - width / 2;
+  });
+  play(packet, [
+    { opacity: 0, transform: `translate3d(${positions[0]}px, -50%, 0)` },
+    { opacity: 1, offset: .08 },
+    { opacity: 1, offset: .48, transform: `translate3d(${positions[1]}px, -50%, 0)` },
+    { opacity: .55, offset: .54, transform: `translate3d(${positions[1]}px, -50%, 0)` },
+    { opacity: 1, offset: .9, transform: `translate3d(${positions[2]}px, -50%, 0)` },
+    { opacity: 0, transform: `translate3d(${positions[2]}px, -50%, 0)` },
+  ], { duration: reducedMotion.matches ? 1 : 1800 });
+  byId("connection-status").textContent = `${document.querySelector('[name="connection"]:checked').value} carries the data to the gateway, which forwards it toward the internet.`;
+}
+
+function playAcross(token, { reverse = false, drop = false, delay = 0, duration = 850 } = {}) {
+  const wire = token.parentElement;
+  const distance = Math.max(0, wire.clientWidth - token.offsetWidth);
+  const start = reverse ? distance : 0;
+  const end = reverse ? 0 : distance;
+  const finalX = drop ? start + (end - start) * .55 : end;
+  const frames = [
+    { opacity: 0, transform: `translate3d(${start}px, -50%, 0)` },
+    { opacity: 1, offset: .12, transform: `translate3d(${start}px, -50%, 0)` },
+    { opacity: 1, offset: drop ? .62 : .88, transform: `translate3d(${finalX}px, -50%, 0)` },
+    { opacity: 0, transform: `translate3d(${finalX}px, ${drop ? "20%" : "-50%"}, 0)` },
+  ];
+  return play(token, frames, {
+    duration: reducedMotion.matches ? 1 : duration,
+    delay: reducedMotion.matches ? 0 : delay,
+  });
+}
+
+async function runPacketDemo(button, recover) {
+  button.disabled = true;
+  const receivedPiece = document.querySelector('[data-packet="3"]');
+  if (recover) {
+    byId("packet-status").textContent = "The sender retransmits only missing piece 3.";
+    await playAcross(document.querySelector('[data-flight="3"]'), { duration: 900 }).finished.catch(() => {});
+    receivedPiece.classList.remove("lost");
+    button.setAttribute("aria-pressed", "false");
+    button.textContent = "Drop #3";
+    byId("packet-status").textContent = "Piece 3 arrived. The receiver can rebuild NETWORK in order.";
+  } else {
+    byId("packet-status").textContent = "Seven numbered packets leave the sender; watch piece 3 on the wire.";
+    const animations = [...document.querySelectorAll("[data-flight]")].map((token, index) =>
+      playAcross(token, { drop: index === 2, delay: index * 90 })
+    );
+    await Promise.all(animations.map((animation) => animation.finished.catch(() => {})));
+    receivedPiece.classList.add("lost");
+    button.setAttribute("aria-pressed", "true");
+    button.textContent = "Resend #3";
+    byId("packet-status").textContent = "Pieces 1, 2, 4, 5, 6, and 7 arrived. The gap identifies piece 3 for retransmission.";
+  }
+  button.disabled = false;
+}
+
+async function runDnsLookup(button) {
+  button.disabled = true;
+  byId("dns-answer").textContent = "?";
+  byId("dns-status").textContent = "The browser sends a DNS query to its resolver.";
+  await playAcross(document.querySelector(".dns-query"), { duration: 750 }).finished.catch(() => {});
+  byId("dns-status").textContent = "The resolver sends its answer back to the browser.";
+  await playAcross(document.querySelector(".dns-response"), { reverse: true, duration: 750 }).finished.catch(() => {});
+  byId("dns-answer").textContent = "142.250.183.14";
+  byId("dns-status").textContent = "The response contains an example IPv4 address. A real answer can vary.";
+  button.textContent = "Look up again ↻";
+  button.disabled = false;
+}
+
 document.addEventListener("click", (event) => {
   const button = event.target.closest("button[data-action]");
   if (!button) return;
 
   switch (button.dataset.action) {
     case "replay-route": {
-      const traveller = document.querySelector(".traveller");
-      traveller.style.animation = "none";
-      requestAnimationFrame(() => { traveller.style.animation = ""; });
+      playOverview();
       break;
     }
     case "send-hello": {
-      const demo = button.closest(".hello-demo");
-      restartAnimation(demo, "running");
-      byId("hello-status").textContent = "Hello delivered. The connection carried data from sender to receiver.";
+      sendHello();
+      break;
+    }
+    case "send-local": {
+      sendLocal();
       break;
     }
     case "drop-packet": {
-      const dropped = button.getAttribute("aria-pressed") === "true";
-      const packet = document.querySelector('[data-packet="3"]');
-      const demo = button.closest(".packet-demo");
-      demo.classList.remove("sending", "recovering");
-      button.setAttribute("aria-pressed", String(!dropped));
-      button.textContent = dropped ? "Drop #3" : "Resend #3";
-      packet.classList.toggle("lost", !dropped);
-      restartAnimation(demo, dropped ? "recovering" : "sending");
-      byId("packet-status").textContent = dropped
-        ? "Piece 3 returned. The receiver can now rebuild NETWORK in order."
-        : "Pieces 1, 2, 4, 5, 6, and 7 arrived. Reliable delivery detects the gap and requests piece 3 again.";
+      runPacketDemo(button, button.getAttribute("aria-pressed") === "true");
       break;
     }
     case "dns-lookup": {
-      byId("dns-answer").textContent = "142.250.183.14";
-      byId("dns-status").textContent = "An example IPv4 answer appeared. A real answer can change by time and location.";
-      button.textContent = "Lookup complete ✓";
+      runDnsLookup(button);
       break;
     }
     case "previous-step":
@@ -61,8 +189,8 @@ document.addEventListener("click", (event) => {
 });
 
 document.querySelector('[data-choice="connection"]').addEventListener("change", (event) => {
-  restartAnimation(document.querySelector(".local-route"), "running");
-  byId("connection-status").textContent = `${event.target.value} carries the data to the gateway.`;
+  byId("connection-status").textContent = `${event.target.value} selected. Send data to replay the local journey.`;
+  sendLocal();
 });
 
 const transportStories = {
@@ -70,9 +198,11 @@ const transportStories = {
     title: "TCP and TLS set up in sequence",
     summary: "Application data waits while the transport and encryption are prepared.",
     lanes: [
-      ["1 · TCP connect", "SYN", "0s"],
-      ["2 · TLS secure", "TLS", ".8s"],
-      ["3 · Request", "GET", "1.6s"],
+      ["TCP · SYN", "SYN →", "forward", 0],
+      ["TCP · SYN-ACK", "← SYN-ACK", "reverse", 700],
+      ["TLS · ClientHello", "HELLO →", "forward", 1400],
+      ["TLS · Server flight", "← TLS", "reverse", 2100],
+      ["HTTP · Request", "GET →", "forward", 2800],
     ],
     events: [
       ["Connect", "TCP establishes the connection."],
@@ -84,9 +214,11 @@ const transportStories = {
     title: "QUIC prepares secure transport together",
     summary: "HTTP/3 can then carry independent streams without one lost stream holding up the others.",
     lanes: [
-      ["1 · Secure connect", "QUIC", "0s"],
-      ["2 · HTML stream", "HTML", ".85s"],
-      ["2 · Image stream", "IMG", "1.05s"],
+      ["QUIC · Initial + TLS", "INITIAL →", "forward", 0],
+      ["QUIC · Handshake", "← SECURE", "reverse", 700],
+      ["HTTP/3 · Request", "GET →", "forward", 1400],
+      ["Stream A · HTML", "← HTML", "reverse", 2100],
+      ["Stream B · Image", "← IMG", "reverse", 2200],
     ],
     events: [
       ["Connect + secure", "QUIC includes TLS in its transport handshake."],
@@ -100,15 +232,21 @@ function showTransport(mode) {
   const story = transportStories[mode];
   const output = byId("transport-output");
   output.dataset.mode = mode;
-  byId("transport-title").textContent = story.title;
+  byId("transport-result-title").textContent = story.title;
   byId("transport-summary").textContent = story.summary;
   byId("transport-lanes").innerHTML = story.lanes
-    .map(([label, token, delay]) => `<div class="transport-lane"><span>${label}</span><i style="--delay: ${delay}">${token}</i></div>`)
+    .map(([label, token, direction, delay]) => `<div class="transport-lane"><span>${label}</span><i data-direction="${direction}" data-delay="${delay}">${token}</i></div>`)
     .join("");
   byId("transport-events").innerHTML = story.events
     .map(([title, copy], index) => `<li><b>${index + 1}</b><span><strong>${title}</strong>${copy}</span></li>`)
     .join("");
-  restartAnimation(output, "playing");
+  output.querySelectorAll(".transport-lane i").forEach((token) => {
+    playAcross(token, {
+      reverse: token.dataset.direction === "reverse",
+      delay: Number(token.dataset.delay),
+      duration: 760,
+    });
+  });
 }
 
 document.querySelector('[data-choice="transport"]').addEventListener("change", (event) => {
@@ -116,7 +254,9 @@ document.querySelector('[data-choice="transport"]').addEventListener("change", (
 });
 
 byId("path-failure").addEventListener("change", (event) => {
-  byId("route-choice").classList.toggle("failed", event.target.checked);
+  const route = byId("route-choice");
+  route.classList.toggle("failed", event.target.checked);
+  restartAnimation(route, "playing");
   byId("route-status").textContent = event.target.checked
     ? "The route through Router A failed. After convergence, the packet uses Router B."
     : "The packet is using the primary route through Router A.";
@@ -262,4 +402,19 @@ if ("IntersectionObserver" in window) {
     links.get(visible.target.id)?.setAttribute("aria-current", "true");
   }, { rootMargin: "-25% 0px -60%", threshold: [0, .2, .5] });
   document.querySelectorAll(".lesson[id]").forEach((section) => observer.observe(section));
+
+  const motionObserver = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      if (entry.target.classList.contains("route-card")) playOverview();
+      if (entry.target.id === "route-choice") restartAnimation(entry.target, "playing");
+      if (entry.target.id === "transport-output") showTransport(document.querySelector('[name="transport-demo"]:checked').value);
+      motionObserver.unobserve(entry.target);
+    }
+  }, { threshold: .35 });
+  [document.querySelector(".route-card"), byId("route-choice"), byId("transport-output")].forEach((element) => motionObserver.observe(element));
+} else {
+  playOverview();
+  restartAnimation(byId("route-choice"), "playing");
+  showTransport("tcp");
 }
