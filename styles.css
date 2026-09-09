@@ -164,6 +164,13 @@ details p { margin-top: 0; color: var(--muted); }
 .mini-route { position: relative; display: flex; align-items: center; min-height: 100px; }
 .mini-route b { flex: 0 0 auto; padding: 12px; border: 1px solid var(--line); border-radius: 9px; background: var(--card-2); font-size: 12px; }
 .mini-route i { flex: 1 1 20px; height: 2px; background: var(--line); }
+.mini-route .local-medium { position: relative; height: 34px; background: none; }
+.local-medium::before { content: ""; position: absolute; top: 50%; right: 0; left: 0; transform: translateY(-50%); }
+.local-medium span { position: absolute; right: 0; bottom: 24px; left: 0; color: var(--muted); font: normal 700 8px ui-monospace, monospace; text-align: center; white-space: nowrap; }
+.local-route[data-link="wifi"] .local-medium::before { height: 12px; border-block: 2px dashed var(--blue); border-radius: 50%; }
+.local-route[data-link="wifi"] .local-packet { background: var(--blue); }
+.local-route[data-link="ethernet"] .local-medium::before { height: 4px; border-radius: 3px; background: var(--mint); box-shadow: 0 -4px 0 rgb(120 216 189 / 22%), 0 4px 0 rgb(120 216 189 / 22%); }
+.local-route[data-link="ethernet"] .local-medium span { color: var(--mint); }
 .mini-route .message { position: absolute; top: 50%; left: 0; z-index: 1; padding: 4px 8px; border-radius: 6px; color: #071018; background: var(--blue); font: 800 9px ui-monospace, monospace; opacity: 0; pointer-events: none; }
 .local-packet { position: absolute; top: 50%; left: 0; z-index: 1; padding: 4px 7px; border-radius: 6px; color: #071018; background: var(--mint); font: 800 8px ui-monospace, monospace; opacity: 0; pointer-events: none; }
 .motion-action { margin-top: 12px; }

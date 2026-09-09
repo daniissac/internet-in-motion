@@ -119,10 +119,10 @@
         <div class="demo">
           <fieldset class="choice-row" data-choice="connection">
             <legend>Choose a local link</legend>
-            <label><input type="radio" name="connection" value="Wi-Fi radio waves" checked> Wi-Fi</label>
-            <label><input type="radio" name="connection" value="An Ethernet cable"> Ethernet</label>
+            <label><input type="radio" name="connection" value="wifi" checked> Wi-Fi</label>
+            <label><input type="radio" name="connection" value="ethernet"> Ethernet</label>
           </fieldset>
-          <div class="mini-route three local-route" aria-hidden="true"><b>Laptop</b><i></i><span class="local-packet">data</span><b>Gateway</b><i></i><b>Internet</b></div>
+          <div class="mini-route three local-route" data-link="wifi" aria-hidden="true"><b>Laptop</b><i class="local-medium"><span id="local-medium-label">Wi-Fi radio</span></i><span class="local-packet">data</span><b>Gateway</b><i></i><b>Internet</b></div>
           <button class="secondary-button motion-action" type="button" data-action="send-local">Send data →</button>
           <p class="status" id="connection-status" aria-live="polite">Wi-Fi selected. Send data to see it cross the local link and gateway.</p>
         </div>

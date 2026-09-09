@@ -80,6 +80,12 @@ function sendHello() {
 
 function sendLocal() {
   const route = document.querySelector(".local-route");
+  const mode = document.querySelector('[name="connection"]:checked').value;
+  const link = mode === "wifi"
+    ? { label: "Wi-Fi radio", status: "Wi-Fi sends the frame over radio to the gateway, which forwards it toward the internet." }
+    : { label: "Ethernet cable", status: "Ethernet sends the frame over a cable to the gateway, which forwards it toward the internet." };
+  route.dataset.link = mode;
+  byId("local-medium-label").textContent = link.label;
   const nodes = route.querySelectorAll("b");
   const packet = route.querySelector(".local-packet");
   const containerRect = route.getBoundingClientRect();
@@ -96,7 +102,7 @@ function sendLocal() {
     { opacity: 1, offset: .9, transform: `translate3d(${positions[2]}px, -50%, 0)` },
     { opacity: 0, transform: `translate3d(${positions[2]}px, -50%, 0)` },
   ], { duration: reducedMotion.matches ? 1 : 1800 });
-  byId("connection-status").textContent = `${document.querySelector('[name="connection"]:checked').value} carries the data to the gateway, which forwards it toward the internet.`;
+  byId("connection-status").textContent = link.status;
 }
 
 function playAcross(token, { reverse = false, drop = false, delay = 0, duration = 850 } = {}) {
@@ -189,7 +195,7 @@ document.addEventListener("click", (event) => {
 });
 
 document.querySelector('[data-choice="connection"]').addEventListener("change", (event) => {
-  byId("connection-status").textContent = `${event.target.value} selected. Send data to replay the local journey.`;
+  byId("connection-status").textContent = `${event.target.value === "wifi" ? "Wi-Fi radio" : "Ethernet cable"} selected. Send data to replay the local journey.`;
   sendLocal();
 });
 

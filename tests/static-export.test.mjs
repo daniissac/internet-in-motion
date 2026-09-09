@@ -23,6 +23,10 @@ test("contains the complete eight-chapter experience", async () => {
   assert.match(css, /prefers-reduced-motion/);
   assert.match(css, /\.mini-route \{ position: relative;/);
   assert.match(html, /class="local-packet">data/);
+  assert.match(html, /data-link="wifi"/);
+  assert.match(html, /id="local-medium-label">Wi-Fi radio/);
+  assert.match(css, /local-route\[data-link="wifi"\]/);
+  assert.match(css, /local-route\[data-link="ethernet"\]/);
   assert.match(script, /function sendHello/);
   assert.match(script, /function sendLocal/);
   assert.match(html, /class="packet-wire"/);
