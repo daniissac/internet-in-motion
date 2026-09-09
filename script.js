@@ -34,12 +34,15 @@ document.addEventListener("click", (event) => {
     case "drop-packet": {
       const dropped = button.getAttribute("aria-pressed") === "true";
       const packet = document.querySelector('[data-packet="3"]');
+      const demo = button.closest(".packet-demo");
+      demo.classList.remove("sending", "recovering");
       button.setAttribute("aria-pressed", String(!dropped));
       button.textContent = dropped ? "Drop #3" : "Resend #3";
       packet.classList.toggle("lost", !dropped);
+      restartAnimation(demo, dropped ? "recovering" : "sending");
       byId("packet-status").textContent = dropped
-        ? "All seven teaching pieces rebuild NETWORK."
-        : "Piece 3 is missing. Reliable delivery detects the gap and sends that piece again.";
+        ? "Piece 3 returned. The receiver can now rebuild NETWORK in order."
+        : "Pieces 1, 2, 4, 5, 6, and 7 arrived. Reliable delivery detects the gap and requests piece 3 again.";
       break;
     }
     case "dns-lookup": {

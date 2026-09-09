@@ -25,6 +25,9 @@ test("contains the complete eight-chapter experience", async () => {
   assert.match(css, /@keyframes hello/);
   assert.match(html, /class="local-packet">data/);
   assert.match(css, /@keyframes local-travel/);
+  assert.match(css, /@keyframes packet-drop/);
+  assert.match(css, /@keyframes packet-return/);
+  assert.match(script, /requests piece 3 again/);
   assert.match(script, /calculateJourney/);
   assert.doesNotMatch(html + css + script, /react|next\/|vite|node_modules/i);
 
