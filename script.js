@@ -58,6 +58,7 @@ document.addEventListener("click", (event) => {
 });
 
 document.querySelector('[data-choice="connection"]').addEventListener("change", (event) => {
+  restartAnimation(document.querySelector(".local-route"), "running");
   byId("connection-status").textContent = `${event.target.value} carries the data to the gateway.`;
 });
 

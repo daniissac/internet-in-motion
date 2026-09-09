@@ -171,6 +171,9 @@ details p { margin-top: 0; color: var(--muted); }
 .mini-route .message { position: absolute; top: 50%; left: 18%; z-index: 1; padding: 4px 8px; border-radius: 6px; color: #071018; background: var(--blue); font: 800 9px ui-monospace, monospace; opacity: 0; pointer-events: none; transform: translate(-50%, -50%); }
 .hello-demo.running .message { animation: hello 1.2s ease both; }
 @keyframes hello { from { left: 18%; opacity: 0; } 20%, 80% { opacity: 1; } to { left: 82%; opacity: 0; } }
+.local-packet { position: absolute; top: 50%; left: 14%; z-index: 1; padding: 4px 7px; border-radius: 6px; color: #071018; background: var(--mint); font: 800 8px ui-monospace, monospace; opacity: 0; pointer-events: none; transform: translate(-50%, -50%); }
+.local-route.running .local-packet { animation: local-travel 2.6s ease-in-out infinite; }
+@keyframes local-travel { 0% { left: 14%; opacity: 0; } 10%, 46% { opacity: 1; } 50% { left: 50%; opacity: 1; } 54% { left: 50%; opacity: .5; } 90% { left: 86%; opacity: 1; } 100% { left: 86%; opacity: 0; } }
 
 fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
 legend { margin-bottom: 12px; color: var(--text); font-weight: 800; }

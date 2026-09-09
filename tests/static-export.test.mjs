@@ -23,6 +23,8 @@ test("contains the complete eight-chapter experience", async () => {
   assert.match(css, /prefers-reduced-motion/);
   assert.match(css, /\.mini-route \{ position: relative;/);
   assert.match(css, /@keyframes hello/);
+  assert.match(html, /class="local-packet">data/);
+  assert.match(css, /@keyframes local-travel/);
   assert.match(script, /calculateJourney/);
   assert.doesNotMatch(html + css + script, /react|next\/|vite|node_modules/i);
 
