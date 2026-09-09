@@ -8,20 +8,11 @@
 /.github/workflows/*
 !/.github/workflows/deploy-pages.yml
 !/.gitignore
+!/LICENSE
 !/README.md
-!/app/
-/app/*
-!/app/globals.css
-!/app/layout.tsx
-!/app/page.tsx
-!/app/components/
-/app/components/*
-!/app/components/JourneyPlayground.module.css
-!/app/components/JourneyPlayground.tsx
-!/app/components/PredictionCheck.module.css
-!/app/components/PredictionCheck.tsx
-!/app/components/RequestThread.module.css
-!/app/components/RequestThread.tsx
+!/index.html
+!/script.js
+!/styles.css
 !/public/
 /public/*
 !/public/favicon.svg
@@ -29,20 +20,12 @@
 !/tests/
 /tests/*
 !/tests/static-export.test.mjs
-!/eslint.config.mjs
-!/next.config.ts
-!/package-lock.json
-!/package.json
-!/postcss.config.mjs
-!/tsconfig.json
 
 # Never publish local, generated, secret, or editor files inside allowed folders.
 **/.DS_Store
 **/node_modules/
-**/.next/
-**/out/
+**/_site/
 **/coverage/
 **/*.log
 **/*.pem
 **/.env*
-next-env.d.ts

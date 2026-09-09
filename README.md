@@ -37,31 +37,28 @@ The site is designed for first-time learners. Technical terms are introduced in 
 
 Internet behavior varies by device, network, protocol, location, cache state, and time. Values shown in the site are illustrative teaching examples rather than measurements. DNS answers can change, routes are not guaranteed to be symmetric, and browsers may reuse cached answers, files, or existing connections.
 
-The site uses Next.js with client-side React components, CSS motion, and no runtime data service. It exports to static files for GitHub Pages.
+The site is plain HTML, CSS, and JavaScript. It has no packages, framework, compilation step, runtime data service, or third-party browser asset. GitHub Pages publishes the source files directly.
 
 ## Accessibility
 
 The experience uses native buttons, links, form controls, visible focus states, live status updates, and descriptive labels. It respects reduced-motion preferences and provides a page-wide motion pause control.
 
-## Run and verify locally
-
-Requires Node.js 22.13 or newer.
+## Run locally
 
 ```bash
-npm ci
-npm run dev
+python3 -m http.server 8000
 ```
 
-Open `http://localhost:3000`.
+Open `http://localhost:8000`.
 
-Before publishing, run the same production checks used by the repository:
+## Verify
+
+The checks use Node.js's built-in test runner and install nothing:
 
 ```bash
-npm run lint
-npm test
+node --test tests/static-export.test.mjs
+node --check script.js
 ```
-
-The production build is a static export written to `out/`.
 
 ## Contributing
 

@@ -4,49 +4,48 @@ import test from "node:test";
 
 const projectRoot = new URL("../", import.meta.url);
 
-test("exports the complete branded experience", async () => {
-  const html = await readFile(new URL("out/index.html", projectRoot), "utf8");
-
-  assert.match(html, /<title>Internet in Motion — Networking, visually explained<\/title>/i);
-  assert.match(html, /Internet in Motion/);
-  assert.match(html, /See the Internet/);
-  assert.match(html, /Networking, visually explained/);
-  assert.match(html, /Reliable-delivery example/);
-  assert.match(html, /TCP and UDP: Two Delivery Styles/);
-  assert.match(html, /https:\/\/google\.com/);
-  assert.match(html, /One journey/);
-  assert.match(html, /Optional DNS side trip · if the site address is not already saved/);
-  assert.match(html, /Reveal IP address/);
-  assert.match(html, /Chapter 7 synthesis/);
-  assert.match(html, /Quick prediction/);
-  assert.match(html, /Packet Playground: run the whole request journey/);
-  assert.match(html, /Your request story will appear here/);
-  assert.match(html, /Simulation, not a speed test/);
-  assert.match(html, /https:\/\/daniissac\.com\/internet-in-motion\//);
-  assert.match(html, /\/internet-in-motion\/_next\//);
-  assert.doesNotMatch(html, /site-creator-vinext-starter|codex-preview/i);
-  assert.doesNotMatch(html, /visually explained by/i);
-  assert.doesNotMatch(html, /internetinmotion\.test|203\.0\.113\.42/i);
-  assert.doesNotMatch(html, /phase-number/);
-});
-
-test("includes the GitHub Pages artifact and deployment workflow", async () => {
-  await Promise.all([
-    access(new URL("out/404.html", projectRoot)),
-    access(new URL("out/_next/static", projectRoot)),
-    access(new URL("out/og.png", projectRoot)),
+test("contains the complete eight-chapter experience", async () => {
+  const [html, css, script] = await Promise.all([
+    readFile(new URL("index.html", projectRoot), "utf8"),
+    readFile(new URL("styles.css", projectRoot), "utf8"),
+    readFile(new URL("script.js", projectRoot), "utf8"),
   ]);
 
-  const [workflow, packageJson, layout] = await Promise.all([
+  assert.match(html, /<title>Internet in Motion \| Networking, visually explained<\/title>/i);
+  assert.match(html, /See the Internet/);
+  assert.match(html, /Reliable delivery/);
+  assert.match(html, /Two Delivery Styles/);
+  assert.match(html, /Quick prediction/);
+  assert.match(html, /Your request story will appear here/);
+  assert.match(html, /https:\/\/daniissac\.com\/internet-in-motion\//);
+  assert.match(html, /name="viewport"/);
+  assert.match(css, /@media \(max-width: 760px\)/);
+  assert.match(css, /prefers-reduced-motion/);
+  assert.match(script, /calculateJourney/);
+  assert.doesNotMatch(html + css + script, /react|next\/|vite|node_modules/i);
+
+  for (const id of ["network", "local", "packets", "dns", "routing", "transport", "website", "performance"]) {
+    assert.match(html, new RegExp(`id="${id}"`));
+    assert.match(html, new RegExp(`href="#${id}"`));
+  }
+});
+
+test("uses only local browser assets and a dependency-free Pages workflow", async () => {
+  await Promise.all([
+    access(new URL("public/favicon.svg", projectRoot)),
+    access(new URL("public/og.png", projectRoot)),
+    access(new URL("LICENSE", projectRoot)),
+  ]);
+
+  const [workflow, index] = await Promise.all([
     readFile(new URL(".github/workflows/deploy-pages.yml", projectRoot), "utf8"),
-    readFile(new URL("package.json", projectRoot), "utf8"),
-    readFile(new URL("app/layout.tsx", projectRoot), "utf8"),
+    readFile(new URL("index.html", projectRoot), "utf8"),
   ]);
 
   assert.match(workflow, /actions\/upload-pages-artifact@v4/);
-  assert.match(workflow, /path:\s*\.\/out/);
+  assert.match(workflow, /path:\s*\.\/_site/);
   assert.match(workflow, /actions\/deploy-pages@v4/);
-  assert.match(packageJson, /"name": "internet-in-motion"/);
-  assert.match(layout, /https:\/\/daniissac\.com\/internet-in-motion\//);
-  assert.doesNotMatch(layout, /next\/headers|generateMetadata/);
+  assert.doesNotMatch(workflow, /npm|pnpm|yarn/);
+  assert.doesNotMatch(index, /https?:\/\/[^"']+\.(?:css|js)/);
+  assert.match(index, /https:\/\/daniissac\.com\/internet-in-motion\//);
 });
