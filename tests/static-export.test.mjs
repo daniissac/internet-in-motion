@@ -21,6 +21,8 @@ test("contains the complete eight-chapter experience", async () => {
   assert.match(html, /name="viewport"/);
   assert.match(css, /@media \(max-width: 760px\)/);
   assert.match(css, /prefers-reduced-motion/);
+  assert.match(css, /\.mini-route \{ position: relative;/);
+  assert.match(css, /@keyframes hello/);
   assert.match(script, /calculateJourney/);
   assert.doesNotMatch(html + css + script, /react|next\/|vite|node_modules/i);
 
