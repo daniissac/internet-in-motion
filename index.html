@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Follow one website request through DNS, routing, transport, and web performance in eight interactive chapters.">
+  <meta name="description" content="Learn the building blocks of a website request, then put DNS, routing, secure transport, HTTP, and rendering into their real order.">
   <link rel="canonical" href="https://daniissac.com/internet-in-motion/">
   <link rel="icon" href="./public/favicon.svg">
   <meta property="og:title" content="Internet in Motion | Networking, visually explained">
@@ -20,10 +20,6 @@
   <header class="site-header">
     <div class="shell nav">
       <a class="brand" href="#top"><b aria-hidden="true">IM</b>Internet in Motion</a>
-      <div class="nav-actions">
-        <span>Beginner friendly</span>
-        <button class="text-button" id="motion-toggle" type="button" aria-pressed="false">Pause motion</button>
-      </div>
     </div>
   </header>
 
@@ -43,20 +39,41 @@
   <main id="main">
     <section class="hero shell" id="top">
       <p class="eyebrow">Networking · Visually explained</p>
-      <h1>See the Internet<br><span>in Motion.</span></h1>
-      <p class="lede">Follow one request from your device to a website—and all the way back again. Change the network, make predictions, and connect each idea to something you can observe.</p>
-      <a class="button" href="#overview">Start the journey ↓</a>
-      <p class="hero-meta">8 chapters · 1 guided simulation · no prior networking knowledge needed</p>
+      <h1>See What Happens When<br><span>You Open a Website.</span></h1>
+      <p class="lede">Follow what happens after you enter a web address—from DNS and local networking to secure transport, HTTP responses, and browser rendering.</p>
+      <a class="button" href="#overview">Follow the journey ↓</a>
+      <p class="hero-meta">8 chapters · interactive demonstrations · no prior networking knowledge needed</p>
     </section>
 
     <section class="section shell" id="overview" aria-labelledby="overview-title">
       <p class="eyebrow">Today’s mission</p>
-      <div class="section-heading">
-        <h2 id="overview-title">Open a website and watch the trip.</h2>
-        <button class="secondary-button" type="button" data-action="replay-route">Replay request ↻</button>
+      <h2 id="overview-title">Open a website and watch the trip.</h2>
+      <p class="copy">When you enter a site name, the browser needs a destination IP address before it can start a new connection to that site. It first checks for a reusable address; otherwise it asks a DNS resolver.</p>
+      <ol class="workflow" aria-label="The real order of a fresh website visit">
+        <li><i>01</i><b>Enter a name</b><span>You request example.com.</span></li>
+        <li class="dns-stage"><i>02</i><b>Resolve it with DNS</b><span>Cache or resolver supplies an IP address.</span></li>
+        <li><i>03</i><b>Connect securely</b><span>TCP with TLS, or QUIC, prepares transport.</span></li>
+        <li><i>04</i><b>Request the page</b><span>HTTP asks for the document and resources.</span></li>
+        <li><i>05</i><b>Process responses</b><span>The browser receives and parses data.</span></li>
+        <li><i>06</i><b>Render progressively</b><span>Content becomes visible as work completes.</span></li>
+      </ol>
+      <p class="sequence-note"><strong>DNS happens before a new site connection:</strong> DNS means <em>Domain Name System</em>. Its query and answer are themselves packets that cross local links and routed networks. Chapters 1–6 unpack these foundations; Chapter 7 puts the browser events back into chronological order.</p>
+      <div class="section-heading route-heading">
+        <div>
+          <p class="eyebrow">After an IP address is known</p>
+          <h3 id="route-flow-title">Packets cross the network in both directions.</h3>
+        </div>
       </div>
-      <p class="copy">Your browser finds the site’s address, creates a secure connection, asks for the page, and turns the response into what you see.</p>
-      <div class="route-card" aria-label="A simplified website request from a device, through a gateway and internet routers, to a server and back">
+      <div class="route-card" aria-labelledby="route-flow-title">
+        <div class="overview-controls">
+          <label class="switch"><input id="overview-dns-cached" type="checkbox"> Use a cached DNS answer</label>
+          <button class="secondary-button" type="button" data-action="replay-route">Play the complete journey →</button>
+        </div>
+        <div class="overview-dns" aria-hidden="true">
+          <span class="motion-endpoint">Browser</span>
+          <div class="overview-dns-wire"><i class="overview-dns-query">DNS QUERY →</i><i class="overview-dns-answer">← IP ADDRESS</i></div>
+          <span class="motion-endpoint">DNS resolver</span>
+        </div>
         <ol class="route" aria-hidden="true">
           <li><i>01</i><b>Device</b><span>Starts the request</span></li>
           <li><i>02</i><b>Gateway</b><span>Leaves your network</span></li>
@@ -67,22 +84,8 @@
           <span class="traveller request-token">GET →</span>
           <span class="traveller response-token">← PAGE</span>
         </div>
-        <p class="route-note"><strong>Teaching model:</strong> cached answers can skip steps, routes can differ in each direction, and real pages make many requests.</p>
-      </div>
-    </section>
-
-    <section class="section shell" aria-labelledby="chapters-title">
-      <p class="eyebrow">The learning route</p>
-      <h2 id="chapters-title">One request, eight connected ideas.</h2>
-      <div class="chapter-grid">
-        <a href="#network"><small>01</small><strong>Hello, Network!</strong><span>Exchange information</span></a>
-        <a href="#local"><small>02</small><strong>Meet the Neighborhood</strong><span>Reach the first router</span></a>
-        <a href="#packets"><small>03</small><strong>Message, Meet Pieces</strong><span>Carry data in packets</span></a>
-        <a href="#dns"><small>04</small><strong>The Name Game</strong><span>Find an IP address</span></a>
-        <a href="#routing"><small>05</small><strong>Pick a Path</strong><span>Move hop by hop</span></a>
-        <a href="#transport"><small>06</small><strong>Delivery Styles</strong><span>Compare TCP and QUIC</span></a>
-        <a href="#website"><small>07</small><strong>Open the Website</strong><span>Put the steps together</span></a>
-        <a href="#performance"><small>08</small><strong>The Feel of Fast</strong><span>Shape the experience</span></a>
+        <p class="status overview-status" id="overview-status" aria-live="polite">Ready. The browser needs an IP address before it can start the website connection.</p>
+        <p class="route-note"><strong>Teaching model:</strong> this line shows one HTTP exchange after address resolution. DNS queries also travel through network devices, routes can differ in each direction, and real pages make many requests.</p>
       </div>
     </section>
 
@@ -90,17 +93,17 @@
       <header class="lesson-heading">
         <p class="eyebrow">Chapter 01 / 08</p>
         <h2 id="network-title">Hello, Network!</h2>
-        <p class="copy"><strong>Goal:</strong> Understand what a network does.</p>
+        <p class="copy"><strong>Goal:</strong> Understand how connected devices exchange the information used throughout a website visit.</p>
       </header>
       <div class="lesson-grid">
         <div>
-          <p class="lead">A network is a group of connected devices that can exchange information. The connection might use a cable, Wi-Fi radio waves, or several joined links.</p>
-          <p class="takeaway"><b>Takeaway</b>A network lets connected devices communicate.</p>
+          <p class="lead">A network is a group of connected devices that can exchange information. The connection might use a cable, Wi-Fi radio waves, or several joined links. When you open a website, your browser exchanges messages with a server through local equipment and other networks.</p>
+          <p class="takeaway"><b>Takeaway</b>A browser sends requests across networks, and a server sends responses back.</p>
         </div>
         <div class="demo hello-demo">
-          <div class="demo-head"><span>Try it</span><button class="secondary-button" type="button" data-action="send-hello">Send “hello” →</button></div>
-          <div class="mini-route" aria-hidden="true"><b>Phone</b><i></i><span class="message">hello</span><i></i><b>Laptop</b></div>
-          <p class="status" id="hello-status" aria-live="polite">Ready to send a message.</p>
+          <div class="demo-head"><span>Website exchange</span><button class="secondary-button" type="button" data-action="send-network-exchange">Send a website request →</button></div>
+          <div class="mini-route" aria-hidden="true"><b>Browser</b><i></i><b>Network</b><span class="message">REQUEST →</span><i></i><b>Server</b></div>
+          <p class="status" id="hello-status" aria-live="polite">Ready. The browser will send a request and the server will return a response.</p>
         </div>
       </div>
     </section>
@@ -116,7 +119,7 @@
           <p class="lead">An access point is the Wi-Fi radio your device joins. A gateway sends traffic from your local network to other networks. Home equipment often combines both jobs in one box.</p>
           <p class="takeaway"><b>Takeaway</b>Your device uses a local link to reach its gateway.</p>
         </div>
-        <div class="demo">
+        <div class="demo local-demo">
           <fieldset class="choice-row" data-choice="connection">
             <legend>Choose a local link</legend>
             <label><input type="radio" name="connection" value="wifi" checked> Wi-Fi</label>
@@ -137,11 +140,21 @@
       </header>
       <div class="lesson-grid">
         <div>
-          <p class="lead">Networks carry data in packets. Real sizes vary, and a packet usually carries many bytes plus headers. Reliable delivery can detect missing data and restore the correct order.</p>
-          <details><summary>Quick prediction</summary><p>If piece 3 is lost, reliable delivery identifies the gap and sends that piece again; the receiver does not guess the data.</p></details>
+          <p class="lead">IP networks carry data in packets; on Wi-Fi or Ethernet, an IP packet rides inside a local-link frame. IP is best effort and does not recover every missing packet. When an application needs reliability, a transport such as TCP or QUIC can detect missing data, retransmit it, and deliver it in the required order.</p>
+          <p class="model-note"><strong>Teaching model:</strong> the numbered letters below represent ordered application data carried by a reliable transport and IP. Real packets normally carry many bytes plus protocol headers—not one letter each.</p>
+          <form class="prediction" data-answer="retransmit" data-correct="Correct. The sequence gap lets the reliable transport request or retransmit the missing data." data-incorrect="Not quite. A reliable transport does not guess the missing bytes or necessarily restart the entire message.">
+            <fieldset>
+              <legend>Quick prediction: what should happen if piece 3 is lost?</legend>
+              <label><input type="radio" name="packet-prediction" value="guess"> The receiver guesses the missing data</label>
+              <label><input type="radio" name="packet-prediction" value="retransmit"> The reliable transport recovers piece 3</label>
+              <label><input type="radio" name="packet-prediction" value="restart"> Every piece must start again</label>
+            </fieldset>
+            <button class="secondary-button" type="submit">Check answer</button>
+            <p class="prediction-feedback" aria-live="polite">Choose one answer, then check your reasoning.</p>
+          </form>
         </div>
         <div class="demo packet-demo">
-          <div class="demo-head"><span>Reliable delivery</span><button class="secondary-button" type="button" data-action="drop-packet" aria-pressed="false">Drop #3</button></div>
+          <div class="demo-head"><span>Reliable transport demo</span><div class="button-group"><button class="secondary-button" type="button" data-action="replay-packets">Replay delivery ↻</button><button class="secondary-button" type="button" data-action="drop-packet" aria-pressed="false">Drop #3</button></div></div>
           <div class="packet-path" aria-hidden="true">
             <span class="motion-endpoint">Sender</span>
             <div class="packet-wire">
@@ -160,13 +173,13 @@
     <section class="section lesson shell" id="dns" aria-labelledby="dns-title">
       <header class="lesson-heading">
         <p class="eyebrow">Chapter 04 / 08</p>
-        <h2 id="dns-title">The Internet’s Name Game</h2>
-        <p class="copy"><strong>Goal:</strong> Turn a readable name into a destination address.</p>
+        <h2 id="dns-title">DNS: The Internet’s Name Game</h2>
+        <p class="copy"><strong>Goal:</strong> See how the browser finds a destination address before opening a new site connection.</p>
       </header>
       <div class="lesson-grid">
         <div>
-          <p class="lead">DNS maps names people use to IP addresses networks can route toward. Answers can vary by time and location, and a device may reuse a cached answer.</p>
-          <p class="takeaway"><b>Takeaway</b>DNS helps the browser find an address for the site.</p>
+          <p class="lead">DNS—the Domain Name System—maps names people use to IP addresses networks can route toward. After you enter a site name, the browser and operating system check for a usable cached answer. If none is available, the device sends a DNS query to its configured resolver. The resolver can answer from its cache or perform more DNS lookups.</p>
+          <p class="takeaway"><b>Where it happens</b>Address resolution happens before a new connection to the website. The DNS query and answer themselves use packets, local links, and routing.</p>
         </div>
         <div class="demo dns-demo">
           <div class="lookup-row"><code>google.com</code><span>→</span><output id="dns-answer">?</output></div>
@@ -175,8 +188,8 @@
             <div class="dns-wire"><i class="dns-query">QUERY →</i><i class="dns-response">← ANSWER</i></div>
             <span class="motion-endpoint">Resolver</span>
           </div>
-          <button class="secondary-button" type="button" data-action="dns-lookup">Reveal example address</button>
-          <p class="status" id="dns-status" aria-live="polite">Ask the resolver for an address.</p>
+          <button class="secondary-button" type="button" data-action="dns-lookup">Run the DNS step →</button>
+          <p class="status" id="dns-status" aria-live="polite">No cached answer is shown. Run DNS before contacting the website.</p>
         </div>
       </div>
     </section>
@@ -190,23 +203,36 @@
       <div class="lesson-grid">
         <div>
           <p class="lead">Each router reads the destination IP address and chooses a next hop using its current routing information. After a failure, routing needs time to converge on another available path.</p>
+          <form class="prediction" data-answer="after-convergence" data-correct="Correct. Later packets can use a learned alternate route after routing information converges." data-incorrect="Not quite. Routers do not all switch at exactly the same instant, and a usable alternate route can carry later packets.">
+            <fieldset>
+              <legend>Quick prediction: what can happen after the primary route fails?</legend>
+              <label><input type="radio" name="route-prediction" value="stop"> All later traffic must stop permanently</label>
+              <label><input type="radio" name="route-prediction" value="instant"> Every router switches at exactly the same instant</label>
+              <label><input type="radio" name="route-prediction" value="after-convergence"> Later packets can use an alternate route after convergence</label>
+            </fieldset>
+            <button class="secondary-button" type="submit">Check answer</button>
+            <p class="prediction-feedback" aria-live="polite">Choose one answer, then compare it with the route lab.</p>
+          </form>
           <p class="takeaway"><b>Takeaway</b>No router needs to know the entire physical journey.</p>
         </div>
         <div class="demo">
-          <div class="route-choice" id="route-choice" role="img" aria-label="The device has a primary route through Router A and an alternate route through Router B to the server">
-            <svg viewBox="0 0 420 260" aria-hidden="true">
-              <path class="route-base primary-path" d="M86 130 L169 48 L334 130"></path>
-              <path class="route-base alternate-path" d="M86 130 L169 212 L334 130"></path>
-              <path class="route-flow primary-flow" pathLength="100" d="M86 130 L169 48 L334 130"></path>
-              <path class="route-flow alternate-flow" pathLength="100" d="M86 130 L169 212 L334 130"></path>
-              <g class="route-node device-node"><rect x="4" y="105" width="82" height="50" rx="9"></rect><text x="45" y="135">Device</text></g>
-              <g class="route-node primary-node"><rect x="169" y="20" width="82" height="56" rx="9"></rect><text x="210" y="44">Router A</text><text class="node-role" x="210" y="61">Primary</text></g>
-              <g class="route-node alternate-node"><rect x="169" y="184" width="82" height="56" rx="9"></rect><text x="210" y="208">Router B</text><text class="node-role" x="210" y="225">Alternate</text></g>
-              <g class="route-node server-node"><rect x="334" y="105" width="82" height="50" rx="9"></rect><text x="375" y="135">Server</text></g>
+          <div class="route-choice" id="route-choice" role="img" aria-label="The device sends to its gateway. Traffic then crosses several router hops on a simplified primary path or, after convergence, an alternate multi-hop path to the destination network and server">
+            <svg viewBox="0 0 520 280" aria-hidden="true">
+              <path class="route-base primary-path" d="M42 140 L170 140 L315 55 L473 140"></path>
+              <path class="route-base alternate-path" d="M42 140 L170 140 L315 225 L473 140"></path>
+              <path class="route-flow primary-flow" pathLength="100" d="M42 140 L170 140 L315 55 L473 140"></path>
+              <path class="route-flow alternate-flow" pathLength="100" d="M42 140 L170 140 L315 225 L473 140"></path>
+              <g class="route-node device-node"><rect x="4" y="115" width="76" height="50" rx="9"></rect><text x="42" y="145">Device</text></g>
+              <g class="route-node gateway-node"><rect x="120" y="112" width="100" height="56" rx="9"></rect><text x="170" y="136">Gateway</text><text class="node-role" x="170" y="153">First router</text></g>
+              <g class="route-path-label primary-node"><text x="315" y="20">Primary path</text><text class="node-role" x="315" y="36">Multiple router hops</text><circle class="route-hop" cx="242" cy="98" r="8"></circle><circle class="route-hop" cx="315" cy="55" r="8"></circle><circle class="route-hop" cx="394" cy="97" r="8"></circle></g>
+              <g class="route-path-label alternate-node"><text x="315" y="260">Alternate path</text><text class="node-role" x="315" y="276">Multiple router hops</text><circle class="route-hop" cx="242" cy="182" r="8"></circle><circle class="route-hop" cx="315" cy="225" r="8"></circle><circle class="route-hop" cx="394" cy="183" r="8"></circle></g>
+              <g class="route-node server-node"><rect x="430" y="115" width="86" height="50" rx="9"></rect><text x="473" y="145">Server</text></g>
             </svg>
           </div>
-          <label class="switch"><input id="path-failure" type="checkbox"> Fail the primary route</label>
-          <p class="status" id="route-status" aria-live="polite">The packet is using the primary route through Router A.</p>
+          <label class="switch"><input id="path-failure" type="checkbox"> Simulate a primary-path failure</label>
+          <button class="secondary-button motion-action" type="button" data-action="replay-routing">Replay the current route →</button>
+          <p class="model-note"><strong>Teaching model:</strong> each branch represents a simplified sequence of router hops, not one router. Real routing recovery varies by protocol, configuration, and failure, and the return path may differ.</p>
+          <p class="status" id="route-status" aria-live="polite">The device sends to its gateway; traffic then crosses the simplified primary multi-hop path.</p>
         </div>
       </div>
     </section>
@@ -214,41 +240,32 @@
     <section class="section lesson shell" id="transport" aria-labelledby="transport-title">
       <header class="lesson-heading">
         <p class="eyebrow">Chapter 06 / 08</p>
-        <h2 id="transport-title">Two Delivery Styles</h2>
+        <h2 id="transport-title">Secure Web Delivery: TCP + TLS and QUIC</h2>
         <p class="copy"><strong>Goal:</strong> Compare secure web transport over TCP and QUIC.</p>
       </header>
       <div class="lesson-grid">
         <div>
-          <p class="lead">TCP provides reliable, ordered bytes. QUIC runs over UDP but adds its own reliable delivery, encryption, and independent streams. HTTP/3 uses QUIC; HTTP/1.1 and HTTP/2 commonly use TCP with TLS.</p>
+          <p class="lead">TCP provides a reliable, ordered byte stream. Web traffic commonly secures TCP with TLS. QUIC runs over UDP and integrates TLS 1.3 with its transport handshake while providing reliable delivery and independent streams. HTTP/3 uses QUIC; HTTP/1.1 and HTTP/2 commonly use TCP with TLS.</p>
           <details><summary>What about plain UDP?</summary><p>UDP itself is a small, connectionless transport. An application can value timeliness over recovery or build additional behavior on top—as QUIC does.</p></details>
+          <form class="prediction" data-answer="quic" data-correct="Correct. HTTP/3 uses QUIC, which runs over UDP but adds secure, reliable transport behavior." data-incorrect="Not quite. HTTP/3 uses QUIC; plain UDP alone does not supply QUIC’s encryption, recovery, or streams.">
+            <fieldset>
+              <legend>Quick prediction: which transport carries HTTP/3?</legend>
+              <label><input type="radio" name="transport-prediction" value="plain-udp"> Plain UDP with no added behavior</label>
+              <label><input type="radio" name="transport-prediction" value="quic"> QUIC with integrated TLS 1.3</label>
+              <label><input type="radio" name="transport-prediction" value="plain-tcp"> Unencrypted TCP</label>
+            </fieldset>
+            <button class="secondary-button" type="submit">Check answer</button>
+            <p class="prediction-feedback" aria-live="polite">Choose one answer, then compare TCP with QUIC.</p>
+          </form>
         </div>
         <div class="demo">
           <fieldset class="transport-cards" data-choice="transport">
             <legend>Choose a secure web transport</legend>
             <label><input type="radio" name="transport-demo" value="tcp" checked><b>TCP + TLS</b><span>HTTP/1.1 or HTTP/2</span></label>
-            <label><input type="radio" name="transport-demo" value="quic"><b>QUIC + TLS</b><span>HTTP/3</span></label>
+            <label><input type="radio" name="transport-demo" value="quic"><b>QUIC with integrated TLS 1.3</b><span>HTTP/3</span></label>
           </fieldset>
-          <div class="transport-output" id="transport-output" data-mode="tcp" aria-live="polite">
-            <div class="transport-result-head">
-              <span class="eyebrow">Result</span>
-              <strong id="transport-result-title">TCP and TLS set up in sequence</strong>
-              <span id="transport-summary">Application data waits while the transport and encryption are prepared.</span>
-            </div>
-            <div class="transport-journey" aria-hidden="true">
-              <span class="transport-endpoint">Browser</span>
-              <div class="transport-lanes" id="transport-lanes">
-                <div class="transport-lane"><span>1 · TCP connect</span><i style="--delay: 0s">SYN</i></div>
-                <div class="transport-lane"><span>2 · TLS secure</span><i style="--delay: .8s">TLS</i></div>
-                <div class="transport-lane"><span>3 · Request</span><i style="--delay: 1.6s">GET</i></div>
-              </div>
-              <span class="transport-endpoint">Server</span>
-            </div>
-            <ol class="transport-events" id="transport-events">
-              <li><b>1</b><span><strong>Connect</strong>TCP establishes the connection.</span></li>
-              <li><b>2</b><span><strong>Secure</strong>TLS negotiates encryption.</span></li>
-              <li><b>3</b><span><strong>Request</strong>The browser can now send HTTP data.</span></li>
-            </ol>
-          </div>
+          <button class="secondary-button motion-action" type="button" data-action="replay-transport">Replay the selected transport →</button>
+          <div class="transport-output" id="transport-output" data-mode="tcp" aria-live="polite"></div>
         </div>
       </div>
     </section>
@@ -257,18 +274,38 @@
       <header class="lesson-heading">
         <p class="eyebrow">Chapter 07 / 08</p>
         <h2 id="website-title">Open Sesame, Website!</h2>
-        <p class="copy"><strong>Goal:</strong> Put the parts together into one page load.</p>
+        <p class="copy"><strong>Goal:</strong> Put the earlier concepts into the real order of a fresh website visit.</p>
       </header>
       <div class="lesson-grid">
         <div>
-          <p class="lead">A fresh visit can involve a DNS lookup, a secure connection, an HTTP request, response data, and browser rendering. Caches and reused connections can shorten the sequence.</p>
-          <p class="takeaway"><b>Takeaway</b>A page load is a coordinated sequence, not one magic packet.</p>
+          <p class="lead">This is the chronological workflow. After you enter a name, a usable cached DNS answer can supply its IP address immediately; otherwise the device asks a DNS resolver. The browser can then create or reuse a secure connection, exchange HTTP data, process resources, and render progressively.</p>
+          <p class="takeaway"><b>Keep in mind</b>Packets cross the local link and routed path during DNS, connection setup, and HTTP. Packetization and routing are continuous foundations, not one-time stages.</p>
         </div>
         <div class="demo stepper">
-          <p class="step-count" id="step-count">Step 1 of 6</p>
-          <h3 id="step-title">Enter the address</h3>
-          <p id="step-copy">The browser receives the site name you want to open.</p>
-          <div class="stepper-actions"><button class="secondary-button" type="button" data-action="previous-step" disabled>← Back</button><button class="secondary-button" type="button" data-action="next-step">Next →</button></div>
+          <div class="section-heading stepper-heading">
+            <div>
+              <p class="eyebrow">Complete journey playback</p>
+              <h3>Follow the browser from name to rendered page.</h3>
+            </div>
+            <label class="switch"><input id="journey-dns-cached" type="checkbox"> DNS answer is cached</label>
+          </div>
+          <ol class="journey-stages" id="journey-stages" aria-label="Stages in the website journey"></ol>
+          <progress id="journey-progress" max="7" value="1">1 of 7</progress>
+          <div class="journey-detail">
+            <p class="step-count" id="step-count">Stage 1 of 7</p>
+            <h3 id="step-title">Enter the site name</h3>
+            <p id="step-copy">The browser receives the name of the site you want to open.</p>
+            <dl>
+              <div><dt>Where</dt><dd id="step-where">Your browser</dd></div>
+              <div><dt>Why it matters</dt><dd id="step-why">The browser needs to know which site you want.</dd></div>
+            </dl>
+          </div>
+          <div class="stepper-actions">
+            <button class="secondary-button" type="button" data-action="previous-step" disabled>← Back</button>
+            <button class="secondary-button" type="button" data-action="play-steps">Play all</button>
+            <button class="secondary-button" type="button" data-action="next-step">Next →</button>
+            <button class="secondary-button" type="button" data-action="replay-steps">Replay ↻</button>
+          </div>
         </div>
       </div>
     </section>
@@ -277,9 +314,24 @@
       <header class="lesson-heading">
         <p class="eyebrow">Chapter 08 / 08</p>
         <h2 id="performance-title">The Feel of Fast</h2>
-        <p class="copy"><strong>Goal:</strong> See how network conditions shape a page load.</p>
+        <p class="copy"><strong>Goal:</strong> See how network conditions shape modeled request and transfer time.</p>
       </header>
-      <p class="lead performance-intro">Run a simplified request, then change one condition at a time. The numbers teach relationships; this is not a speed test or a page-load prediction.</p>
+      <p class="lead performance-intro">Run a simplified network-time model, then change one condition at a time. The numbers teach relationships; they do not predict a complete page load.</p>
+
+      <aside class="experiment-guide" aria-labelledby="experiments-title">
+        <p class="eyebrow">Guided experiment</p>
+        <h3 id="experiments-title">Change one condition, run it, and compare.</h3>
+        <p>Each preset resets the model first, changes only the named condition, and runs the journey. This makes cause and effect easier to see.</p>
+        <div class="experiment-buttons">
+          <button class="secondary-button" type="button" data-action="run-experiment" data-experiment="latency">High latency</button>
+          <button class="secondary-button" type="button" data-action="run-experiment" data-experiment="bandwidth">Low bandwidth</button>
+          <button class="secondary-button" type="button" data-action="run-experiment" data-experiment="loss">3% loss</button>
+          <button class="secondary-button" type="button" data-action="run-experiment" data-experiment="jitter">High jitter</button>
+          <button class="secondary-button" type="button" data-action="run-experiment" data-experiment="dns">Cached DNS</button>
+          <button class="secondary-button" type="button" data-action="run-experiment" data-experiment="quic">QUIC</button>
+          <button class="secondary-button" type="button" data-action="run-experiment" data-experiment="route">Route failure</button>
+        </div>
+      </aside>
 
       <form class="playground" id="playground">
         <div class="controls">
@@ -291,21 +343,23 @@
           <fieldset>
             <legend>2. Choose the transport</legend>
             <label><input type="radio" name="journey-transport" value="tcp" checked> TCP + TLS</label>
-            <label><input type="radio" name="journey-transport" value="quic"> QUIC + TLS 1.3</label>
+            <label><input type="radio" name="journey-transport" value="quic"> QUIC with integrated TLS 1.3</label>
           </fieldset>
           <fieldset class="sliders">
             <legend>3. Shape the network</legend>
             <label><span>Round-trip latency <output id="latency-output">40 ms</output></span><input id="latency" type="range" min="10" max="300" step="10" value="40"></label>
             <label><span>Available bandwidth <output id="bandwidth-output">50 Mbps</output></span><input id="bandwidth" type="range" min="1" max="200" value="50"></label>
             <label><span>Packet loss <output id="loss-output">0%</output></span><input id="loss" type="range" min="0" max="10" value="0"></label>
+            <label><span>Jitter variation <output id="jitter-output">0 ms</output></span><input id="jitter" type="range" min="0" max="100" step="5" value="0"><small>Variable delay is described, not added as a fixed time penalty.</small></label>
+            <label><span>Assumed route recovery <output id="route-recovery-output">600 ms</output></span><input id="route-recovery" type="range" min="100" max="5000" step="100" value="600"><small>Counted only when the first network path fails.</small></label>
           </fieldset>
-          <button class="button run-button" type="submit">Run request →</button>
+          <div class="run-actions"><button class="button run-button" type="submit">Run request →</button><button class="secondary-button" type="reset">Reset</button></div>
         </div>
 
         <div class="result-panel" aria-live="polite">
           <div class="result-empty" id="result-empty"><b>Your request story will appear here.</b><span>Keep the defaults for your first run.</span></div>
           <div class="result" id="result" hidden>
-            <p class="eyebrow">Modeled total</p>
+            <p class="eyebrow">Modeled network time</p>
             <strong class="result-total" id="result-total">0 ms</strong>
             <p id="result-outcome"></p>
             <dl id="breakdown"></dl>
@@ -314,12 +368,12 @@
           </div>
         </div>
       </form>
-      <p class="assumption"><strong>Model assumptions:</strong> an 800 KB response, a new secure connection, one responsive DNS resolver, and a working alternate path. Real networks, servers, browsers, congestion, and loss recovery vary.</p>
+      <p class="assumption"><strong>Model boundary:</strong> an 800 KB response, a new secure connection, one responsive DNS resolver, and a working alternate path. The loss penalty is an illustrative approximation, route recovery is your selected assumption, and jitter is reported without inventing a fixed penalty. Server processing, protocol overhead, congestion control, slow start, resource discovery, parsing, and rendering are excluded.</p>
     </section>
 
     <section class="section finish shell" aria-labelledby="finish-title">
       <p class="eyebrow">Journey complete</p>
-      <h2 id="finish-title">You can now explain how a website reaches your screen.</h2>
+      <h2 id="finish-title">You can now explain what happens when a browser opens a website.</h2>
       <a class="button" href="#top">Start again ↑</a>
     </section>
   </main>

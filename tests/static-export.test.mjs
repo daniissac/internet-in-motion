@@ -2,75 +2,41 @@ import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
-const projectRoot = new URL("../", import.meta.url);
+const root = new URL("../", import.meta.url);
+const read = (path) => readFile(new URL(path, root), "utf8");
 
-test("contains the complete eight-chapter experience", async () => {
-  const [html, css, script] = await Promise.all([
-    readFile(new URL("index.html", projectRoot), "utf8"),
-    readFile(new URL("styles.css", projectRoot), "utf8"),
-    readFile(new URL("script.js", projectRoot), "utf8"),
+test("ships the complete dependency-free lesson", async () => {
+  const [html, css, script, workflow] = await Promise.all([
+    read("index.html"), read("styles.css"), read("script.js"), read(".github/workflows/deploy-pages.yml"),
+    access(new URL("public/favicon.svg", root)), access(new URL("public/og.png", root)), access(new URL("LICENSE", root)),
   ]);
-
-  assert.match(html, /<title>Internet in Motion \| Networking, visually explained<\/title>/i);
-  assert.match(html, /See the Internet/);
-  assert.match(html, /Reliable delivery/);
-  assert.match(html, /Two Delivery Styles/);
-  assert.match(html, /Quick prediction/);
-  assert.match(html, /Your request story will appear here/);
-  assert.match(html, /https:\/\/daniissac\.com\/internet-in-motion\//);
-  assert.match(html, /name="viewport"/);
-  assert.match(css, /@media \(max-width: 760px\)/);
-  assert.match(css, /prefers-reduced-motion/);
-  assert.match(css, /\.mini-route \{ position: relative;/);
-  assert.match(html, /class="local-packet">data/);
-  assert.match(html, /data-link="wifi"/);
-  assert.match(html, /id="local-medium-label">Wi-Fi radio/);
-  assert.match(css, /local-route\[data-link="wifi"\]/);
-  assert.match(css, /local-route\[data-link="ethernet"\]/);
-  assert.match(script, /function sendHello/);
-  assert.match(script, /function sendLocal/);
-  assert.match(html, /class="packet-wire"/);
-  assert.match(script, /runPacketDemo/);
-  assert.match(html, /class="dns-wire"/);
-  assert.match(script, /runDnsLookup/);
-  assert.match(html, /Router A[\s\S]+Primary[\s\S]+Router B[\s\S]+Alternate/);
-  assert.match(css, /@keyframes route-flow/);
-  assert.match(script, /packet uses Router B/);
-  assert.match(html, /id="transport-output"/);
-  assert.match(script, /QUIC includes TLS in its transport handshake/);
-  assert.match(script, /transport-result-title/);
-  assert.match(script, /function playAcross/);
-  assert.match(script, /activeAnimations/);
-  assert.match(script, /\.animate\(keyframes/);
-  assert.doesNotMatch(css, /animation:[^;]*infinite/);
-  assert.match(script, /calculateJourney/);
-  assert.doesNotMatch(html + css + script, /react|next\/|vite|node_modules/i);
-
-  const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
-  assert.equal(new Set(ids).size, ids.length, "every HTML id must be unique");
 
   for (const id of ["network", "local", "packets", "dns", "routing", "transport", "website", "performance"]) {
     assert.match(html, new RegExp(`id="${id}"`));
     assert.match(html, new RegExp(`href="#${id}"`));
   }
-});
 
-test("uses only local browser assets and a dependency-free Pages workflow", async () => {
-  await Promise.all([
-    access(new URL("public/favicon.svg", projectRoot)),
-    access(new URL("public/og.png", projectRoot)),
-    access(new URL("LICENSE", projectRoot)),
-  ]);
+  for (const marker of [
+    "DNS happens before a new site connection", "Wi-Fi radio", "Reliable transport demo",
+    "First router", "QUIC with integrated TLS 1.3", "Complete journey playback", "Modeled network time",
+  ]) assert.ok(html.includes(marker), `missing lesson content: ${marker}`);
 
-  const [workflow, index] = await Promise.all([
-    readFile(new URL(".github/workflows/deploy-pages.yml", projectRoot), "utf8"),
-    readFile(new URL("index.html", projectRoot), "utf8"),
-  ]);
+  for (const action of [
+    "replay-route", "send-network-exchange", "send-local", "replay-packets", "drop-packet", "dns-lookup",
+    "replay-routing", "replay-transport", "previous-step", "play-steps", "next-step", "replay-steps", "run-experiment",
+  ]) {
+    assert.ok(html.includes(`data-action="${action}"`), `missing control: ${action}`);
+    assert.ok(script.includes(`case "${action}"`), `missing handler: ${action}`);
+  }
 
-  assert.match(workflow, /actions\/upload-pages-artifact@v4/);
-  assert.match(workflow, /path:\s*\.\/_site/);
-  assert.match(workflow, /actions\/deploy-pages@v4/);
+  const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
+  assert.equal(new Set(ids).size, ids.length, "HTML ids must be unique");
+  assert.match(css, /@media \(max-width: 620px\)[\s\S]+prefers-reduced-motion/);
+  assert.match(css, /label\.incorrect:has\(input:checked\)/);
+  assert.match(script, /calculateJourney[\s\S]+Variable delay observed/);
+  assert.ok(script.includes("ServerHello + certificate") && script.includes("Answer changed"));
+  assert.doesNotMatch(html + css + script, /react|next\/|vite|node_modules/i);
+  assert.doesNotMatch(html, /https?:\/\/[^"']+\.(?:css|js)/);
+  assert.match(workflow, /upload-pages-artifact@v4[\s\S]+path:\s*\.\/_site[\s\S]+deploy-pages@v4/);
   assert.doesNotMatch(workflow, /npm|pnpm|yarn/);
-  assert.doesNotMatch(index, /https?:\/\/[^"']+\.(?:css|js)/);
-  assert.match(index, /https:\/\/daniissac\.com\/internet-in-motion\//);
 });
