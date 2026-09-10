@@ -37,6 +37,6 @@ test("ships the complete dependency-free lesson", async () => {
   assert.ok(script.includes("ServerHello + certificate") && script.includes("Answer changed"));
   assert.doesNotMatch(html + css + script, /react|next\/|vite|node_modules/i);
   assert.doesNotMatch(html, /https?:\/\/[^"']+\.(?:css|js)/);
-  assert.match(workflow, /upload-pages-artifact@v4[\s\S]+path:\s*\.\/_site[\s\S]+deploy-pages@v4/);
+  assert.match(workflow, /configure-pages@v6[\s\S]+upload-pages-artifact@v5[\s\S]+path:\s*\.\/_site[\s\S]+deploy-pages@v5/);
   assert.doesNotMatch(workflow, /npm|pnpm|yarn/);
 });
